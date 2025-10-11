@@ -2,7 +2,14 @@ Tech Stack
 - Frontend 
     - HTML, CSS, Javascript
 - Backend 
-    - NodeJS, PostgreSQL, node-postgres (pg. for querying database)
+    - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
+
+Install dotenv for enviornment configuration:
+    - npm install dotenv (inside backend folder)
+
+Initialize NodeJs file using npm (Node Package Manager) ():
+- npm init (inside backend folder)
+    - This creates the package.json file that allows for node.js configuration and your node.js server to run
 
 Non-docker FrontEnd server start:
 - python -m http.server 8080
