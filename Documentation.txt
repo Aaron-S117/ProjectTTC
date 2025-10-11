@@ -1,0 +1,12 @@
+Tech Stack
+- Frontend 
+    - HTML, CSS, Javascript
+- Backend 
+    - NodeJS, PostgreSQL, node-postgres (pg. for querying database)
+
+Non-docker FrontEnd server start:
+- python -m http.server 8080
+
+Non-docker BackEnd server start: 
+- node server.js 
+
