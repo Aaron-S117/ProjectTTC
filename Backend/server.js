@@ -8,6 +8,7 @@ dotenv.config();
 const baseURL = process.env.baseURL;
 const backendPort = process.env.backendPort;
 
+// Creates server and defines paths
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
 
@@ -26,6 +27,7 @@ const server = http.createServer((req, res) => {
 })
 
 const port = backendPort;
+// After creating the server, tells it to listen on that port 
 server.listen(port, () => {
     console.log(`Server running at ${baseURL}:${port}`);
 })

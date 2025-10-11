@@ -4,12 +4,20 @@ Tech Stack
 - Backend 
     - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
 
-Install dotenv for enviornment configuration:
-    - npm install dotenv (inside backend folder)
 
+-- Done on first pull
 Initialize NodeJs file using npm (Node Package Manager) ():
 - npm init (inside backend folder)
     - This creates the package.json file that allows for node.js configuration and your node.js server to run
+
+-- Done on first pull
+Install dotenv for enviornment configuration:
+    - npm install dotenv (inside backend folder)
+
+-- Done on first pull
+change "type" value in package.json (Backend folder) to "module"
+    - Allows server.js file to import dependecies
+
 
 Non-docker FrontEnd server start:
 - python -m http.server 8080
