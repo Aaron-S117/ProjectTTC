@@ -1,8 +1,18 @@
 let page = '';
 
-async function handleLogin() {
-    const loginModule = await import('./login.js');
-    console.log(loginModule.verifyLogin());
+function verifyLogin() {
+    const loginDiv = document.getElementById('login');
+
+    return 'test';
 }
 
-handleLogin();
+async function HandleAccountCreation() {
+    const loginDiv = document.getElementById('login');
+    loginDiv.remove();
+
+    const loginImport = await import('./login.js');
+    const CAR = loginImport.createAccountRegPage();
+}
+
+const CARButton = document.getElementById("CreateAccountLink");
+CARButton.addEventListener('click', HandleAccountCreation);
