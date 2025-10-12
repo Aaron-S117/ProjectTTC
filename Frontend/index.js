@@ -14,5 +14,15 @@ async function HandleAccountCreation() {
     loginImport.createAccountRegPage();
 }
 
+async function HandleHomepage() {
+    console.log('This is the homepage');
+
+    const homepageImport = await import ('./homepage.js');
+    homepageImport.homepageHandler();
+}
+
 const CARButton = document.getElementById("CreateAccountLink");
 CARButton.addEventListener('click', HandleAccountCreation);
+
+const loginButton = document.getElementById("SignIn");
+loginButton.addEventListener('click', HandleHomepage);

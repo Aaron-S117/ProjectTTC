@@ -12,29 +12,42 @@ export function createAccountRegPage() {
 
 }
 
+
+// Class for setting up the account creation page
 class createAccount{
 
     createElem(mainElm, id, type, element) {
 
         const elem = document.createElement(element);
-        elem.setAttribute('id', id);
         if (type === 'empty'){
             console.log('not setting type attribute')
         }
         else {
             elem.setAttribute('type', type);
         }
+        elem.setAttribute('id', id);
    
         mainElm.appendChild(elem);
     
+        return elem;
     }
     
     carFormCreation(mainElm) {
 
+
+        let title = this.createElem(mainElm, 'titleText', 'empty', 'h2');
+        title.textContent = 'Creating Account...';
+        let usernameTxt = this.createElem(mainElm, 'usernameText', 'empty', 'p');
+        usernameTxt.textContent = 'Username: ';
+        let passwordTxt = this.createElem(mainElm, 'passwordText', 'empty', 'p');
+        passwordTxt.textContent = 'Password: ';
+
+
         // Calls to create textboxes and buttons
-        let usernameTBox = this.createElem(mainElm, 'username', 'text', 'input')
-        let paswordTBox = this.createElem(mainElm, 'password', 'text', 'input')
+        let usernameTBox = this.createElem(usernameTxt, 'usernameBox', 'text', 'input')
+        let paswordTBox = this.createElem(passwordTxt, 'passwordBox', 'text', 'input')
         let createButton = this.createElem(mainElm, 'createButton', 'empty', 'button')
+        createButton.textContent = 'Submit Account';
 
     }
     
