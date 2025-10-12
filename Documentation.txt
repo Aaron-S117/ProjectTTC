@@ -4,6 +4,7 @@ Tech Stack
 - Backend 
     - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
 
+// Installs and Server Run Commands
 
 -- Done on first pull
 Initialize NodeJs file using npm (Node Package Manager) ():
@@ -12,11 +13,16 @@ Initialize NodeJs file using npm (Node Package Manager) ():
 
 -- Done on first pull
 Install dotenv for enviornment configuration:
-    - npm install dotenv (inside backend folder)
+- npm install dotenv (inside backend folder)
+    - installs dotenv library/dependecies for reading and modifying the .env config file
 
 -- Done on first pull
-change "type" value in package.json (Backend folder) to "module"
+- change "type" value in package.json (Backend folder) to "module"
     - Allows server.js file to import dependecies
+
+-- Done on first pull 
+- npm install pg
+    - Installs node-postgres sql library for querying postgres database in NodeJS 
 
 
 Non-docker FrontEnd server start:
@@ -24,4 +30,8 @@ Non-docker FrontEnd server start:
 
 Non-docker BackEnd server start: 
 - node server.js 
+
+// Table Schema
+Users 
+
 
