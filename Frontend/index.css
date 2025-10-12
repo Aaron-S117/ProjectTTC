@@ -22,6 +22,17 @@
     left: 90vh;
 }
 
+.card {
+    background-color: lightgrey;
+    border: solid grey 1px;
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    min-width: 300px;
+    min-height: 100px;
+}
+
 #CreateAccountLink {
     background-color: white;
     color: blueviolet;

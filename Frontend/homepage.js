@@ -13,6 +13,13 @@ class homepage {
         mainDiv.classList.add('mainDiv');
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = 'Homepage';
+
+        let card1 = this.createCard(mainDiv);
+        let card2 = this.createCard(mainDiv);
+        let card3 = this.createCard(mainDiv);
+        let card4 = this.createCard(mainDiv);
+        let card5 = this.createCard(mainDiv);
+        let card6 = this.createCard(mainDiv);
     }
 
     createElem(mainElm, id, type, element) {
@@ -29,5 +36,12 @@ class homepage {
         mainElm.appendChild(elem);
     
         return elem;
+    }
+
+    createCard(mainElm) {
+        let card = document.createElement('div');
+        card.setAttribute('class', 'card');
+        card.textContent = 'Test Card';
+        mainElm.appendChild(card);
     }
 }
