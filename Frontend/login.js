@@ -20,7 +20,7 @@ class createAccount{
 
         const elem = document.createElement(element);
         if (type === 'empty'){
-            console.log('not setting type attribute')
+            // console.log('not setting type attribute')
         }
         else {
             elem.setAttribute('type', type);

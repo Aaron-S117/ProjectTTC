@@ -12,6 +12,8 @@ async function HandleAccountCreation() {
 
     const loginImport = await import('./login.js');
     loginImport.createAccountRegPage();
+
+    page = 'CreateAccount';
 }
 
 async function HandleHomepage() {
@@ -19,6 +21,8 @@ async function HandleHomepage() {
 
     const homepageImport = await import ('./homepage.js');
     homepageImport.homepageHandler();
+
+    page = 'HomePage';
 }
 
 const CARButton = document.getElementById("CreateAccountLink");
