@@ -80,8 +80,8 @@ try {
     // const res2 = await client.query('SELECT NOW()');
     // console.log(res2.rows);
 
-    const res3 = await client.query('SELECT * FROM Users');
-    console.log(res3.rows);
+    // const res3 = await client.query('SELECT * FROM Users');
+    //console.log(res3.rows);
  } catch (err) {
     console.error(err);
  } finally {
@@ -146,9 +146,34 @@ const server = http.createServer(async (req, res) => {
             body += chunk.toString(); // Append each chunk to the body string
         });
 
-        req.on('end', () => {
-            res.write(body);
-            res.end();
+        req.on('end', async () => {
+            let parsedbody = JSON.parse(body)
+            if (!parsedbody.Username || !parsedbody.Password) {
+                req.statusCode = 400;
+                res.end('Bad Request, Username or Password missing');
+            }
+            
+            try {
+                let sqlQuery = `SELECT "Username", "Password" FROM users 
+                WHERE "Username" = '${parsedbody.Username}' and "Password" = '${parsedbody.Password}'`
+                console.log(sqlQuery);
+
+                let findUser = await client.query(sqlQuery) ;
+
+                console.log(findUser);
+                
+                if(findUser.rows.length === 0) {
+                    req.statusCode = 402
+                    res.end("Incorrect Username or Password");
+                }
+
+                req.statusCode = 200;
+                res.end('Account Match');
+            } catch(err) {
+                console.error(err);
+                res.end();
+            }
+
         });
     }
 })
