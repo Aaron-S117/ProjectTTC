@@ -86,6 +86,7 @@ try {
     console.error(err);
  } finally {
     console.log('Schema created/updated');
+    // Shutdowns database connection and in turn the backend server
     // await client.end()
  }
 
@@ -127,7 +128,8 @@ const server = http.createServer(async (req, res) => {
     else if (parsedUrl.pathname ==='/users' && method === "GET") {
         try {
             const allusers = await client.query('SELECT * FROM USERS');
-            console.log(allusers.rows);
+            // console.log(allusers);
+            res.write(JSON.stringify(allusers.rows));
         } catch (err) {
             console.error(err);
          } finally {
