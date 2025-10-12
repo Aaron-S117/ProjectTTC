@@ -1,6 +1,5 @@
 
 export function createAccountRegPage() {
-    console.log("Test Import");
 
     const mainElement = document.createElement('div')
     mainElement.setAttribute('id', 'CARMain');
@@ -8,23 +7,38 @@ export function createAccountRegPage() {
     body.appendChild(mainElement);
 
 
-    carFormCreation(mainElement);
+    let accountCreation = new createAccount;
+    accountCreation.carFormCreation(mainElement);
 
 }
 
-function carFormCreation(mainElm) {
+class createAccount{
 
-    const username = document.createElement('input');
-    username.setAttribute('id', 'username');
-    username.setAttribute('type', 'text');
-    mainElm.appendChild(username);
+    createElem(mainElm, id, type, element) {
 
-    const password = document.createElement('input');
-    password.setAttribute('id', 'password');
-    password.setAttribute('type', 'text');
-    mainElm.appendChild(password);
+        const elem = document.createElement(element);
+        elem.setAttribute('id', id);
+        if (type === 'empty'){
+            console.log('not setting type attribute')
+        }
+        else {
+            elem.setAttribute('type', type);
+        }
+   
+        mainElm.appendChild(elem);
+    
+    }
+    
+    carFormCreation(mainElm) {
 
-    const createButton = document.createElement('button');
-    createButton.setAttribute('id', 'createButton');
-    mainElm.appendChild(createButton);
+        // Calls to create textboxes and buttons
+        let usernameTBox = this.createElem(mainElm, 'username', 'text', 'input')
+        let paswordTBox = this.createElem(mainElm, 'password', 'text', 'input')
+        let createButton = this.createElem(mainElm, 'createButton', 'empty', 'button')
+
+    }
+    
 }
+
+
+
