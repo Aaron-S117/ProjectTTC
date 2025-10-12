@@ -1,4 +1,4 @@
-baseURL = 'http://localhost:3000/'
+const baseURL = 'http://localhost:3000/'
 
 // Handles account creation page
 export function createAccountRegPage() {
@@ -16,36 +16,38 @@ export function createAccountRegPage() {
 }
 
 // Handle login workflow including validation, and singing users in
-export function loginWorkflow() {
+export async function loginWorkflow() {
 
     const usernameBox = document.getElementById("Username");
     const passwordBox = document.getElementById("Password");
 
-    if (!Username.value || !Password.value) {
+    if (!usernameBox.value || !passwordBox.value) {
         console.log('Insufficient Information');
 
     }
+
     let Username = usernameBox.value;
     let Password = passwordBox.value;
 
-    postdata = {
+    let postdata = {
         Username: Username,
         Password: Password
     }
 
-    const loginData = fetch(baseURL + 'UserLogin', {
+    const loginData = await fetch(baseURL + 'UserLogin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(postdata)
     })
-    .then((response) => {
+    .then(async (response) => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        return response.blob();
+        const logindata = await response.blob()
+        return loginData;
     })
 
     console.log('Username: ' + Username + '. Password: ' + Password); 
@@ -59,7 +61,6 @@ class loginHelper {
 
 
 }
-
 
 // Class for setting up the account creation page
 class createAccount {

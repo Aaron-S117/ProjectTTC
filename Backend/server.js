@@ -160,13 +160,13 @@ const server = http.createServer(async (req, res) => {
 
                 let findUser = await client.query(sqlQuery) ;
 
-                console.log(findUser);
-                
                 if(findUser.rows.length === 0) {
                     req.statusCode = 402
+                    console.log('Account not found');
                     res.end("Incorrect Username or Password");
                 }
 
+                console.log('Account Match');
                 req.statusCode = 200;
                 res.end('Account Match');
             } catch(err) {
