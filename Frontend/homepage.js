@@ -17,9 +17,6 @@ class homepage {
         let card1 = this.createCard(mainDiv);
         let card2 = this.createCard(mainDiv);
         let card3 = this.createCard(mainDiv);
-        let card4 = this.createCard(mainDiv);
-        let card5 = this.createCard(mainDiv);
-        let card6 = this.createCard(mainDiv);
     }
 
     createElem(mainElm, id, type, element) {
