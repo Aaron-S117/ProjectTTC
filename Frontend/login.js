@@ -1,8 +1,9 @@
 
 export function createAccountRegPage() {
 
-    const mainElement = document.createElement('div')
+    const mainElement = document.createElement('div');
     mainElement.setAttribute('id', 'CARMain');
+    mainElement.classList.add('mainDiv');
     const body = document.getElementsByTagName('body')[0];
     body.appendChild(mainElement);
 
