@@ -16,6 +16,13 @@ async function HandleAccountCreation() {
     page = 'CreateAccount';
 }
 
+async function HandleLogin() {
+
+    const loginImport = await import('./login.js');
+    loginImport.loginWorkflow();
+    
+}
+
 async function HandleHomepage() {
     console.log('This is the homepage');
 
@@ -29,4 +36,4 @@ const CARButton = document.getElementById("CreateAccountLink");
 CARButton.addEventListener('click', HandleAccountCreation);
 
 const loginButton = document.getElementById("SignIn");
-loginButton.addEventListener('click', HandleHomepage);
+loginButton.addEventListener('click', HandleLogin);

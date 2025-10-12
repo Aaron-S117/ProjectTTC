@@ -137,6 +137,20 @@ const server = http.createServer(async (req, res) => {
             res.end();
          }
     }
+    else if (parsedUrl.pathname === '/UserLogin' && method === "POST") {
+
+        let body = '';
+
+        // Used to get the request body. Creates a event listener that takes time to complete
+        req.on('data', chunk => {
+            body += chunk.toString(); // Append each chunk to the body string
+        });
+
+        req.on('end', () => {
+            res.write(body);
+            res.end();
+        });
+    }
 })
 
 const port = backendPort;

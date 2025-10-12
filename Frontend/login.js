@@ -1,4 +1,6 @@
+baseURL = 'http://localhost:3000/'
 
+// Handles account creation page
 export function createAccountRegPage() {
 
     const mainElement = document.createElement('div');
@@ -13,9 +15,54 @@ export function createAccountRegPage() {
 
 }
 
+// Handle login workflow including validation, and singing users in
+export function loginWorkflow() {
+
+    const usernameBox = document.getElementById("Username");
+    const passwordBox = document.getElementById("Password");
+
+    if (!Username.value || !Password.value) {
+        console.log('Insufficient Information');
+
+    }
+    let Username = usernameBox.value;
+    let Password = passwordBox.value;
+
+    postdata = {
+        Username: Username,
+        Password: Password
+    }
+
+    const loginData = fetch(baseURL + 'UserLogin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postdata)
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return response.blob();
+    })
+
+    console.log('Username: ' + Username + '. Password: ' + Password); 
+}
+
+class loginHelper {
+    loginValidation() {
+        // todo
+        console.log('stuff');
+    }
+
+
+}
+
 
 // Class for setting up the account creation page
-class createAccount{
+class createAccount {
 
     createElem(mainElm, id, type, element) {
 
