@@ -36,7 +36,7 @@ Users
 collection
 item
 
-CREATE TABLE IF NOT EXISTS Users
+CREATE TABLE IF NOT EXISTS users
 (
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
@@ -45,12 +45,13 @@ CREATE TABLE IF NOT EXISTS Users
     "ChangeDate" time with time zone,
     CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
     CONSTRAINT "Unique ID" UNIQUE ("ID")
-        INCLUDE("ID")
+        INCLUDE("ID"),
+    CONSTRAINT usernameunique UNIQUE ("Username")
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS Users
+ALTER TABLE IF EXISTS users
     OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS collection

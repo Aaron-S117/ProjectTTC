@@ -166,7 +166,6 @@ const server = http.createServer(async (req, res) => {
             }
             
             try {
-
                 let sqlQuery = `SELECT "Username", "Password" FROM users 
                 WHERE "Username" = '${parsedbody.Username}' and "Password" = '${parsedbody.Password}'`
 
@@ -174,12 +173,9 @@ const server = http.createServer(async (req, res) => {
 
                 if(findUser.rows.length === 0) {
                     res.statusCode = 402
-                    console.log('Account not found');
                     res.end("Incorrect Username or Password");
                     return;
                 }
-
-                console.log('Account Match');
                 res.statusCode = 200;
                 res.end(JSON.stringify('Account Match'));
             } catch(err) {
@@ -189,7 +185,42 @@ const server = http.createServer(async (req, res) => {
             } finally {
                 // todo
             }
+        });
+    }
+    else if (parsedUrl.pathname === '/UserCreation' && method === "POST") {
+        let body = '';
 
+        // Used to get the request body. Creates a event listener that takes time to complete
+        req.on('data', chunk => {
+            body += chunk.toString(); // Append each chunk to the body string
+        });
+
+        req.on('end', async () => {
+            let parsedbody = JSON.parse(body)
+            if (!parsedbody.Username || !parsedbody.Password) {
+                res.statusCode = 400;
+                res.end('Bad Request, Username or Password missing');
+            }
+            
+            try {
+
+                let sqlQuery = `INSERT INTO users("Username", "Password")
+                                VALUES ('${parsedbody.Username}', '${parsedbody.Password}')`
+
+                let insertUser = await client.query(sqlQuery);
+
+                console.log('Row Count: ' + insertUser.rowCount);
+            
+                res.statusCode = 201;
+                res.end('User Created');
+
+            } catch(err) {
+                console.error(err);
+                res.statusCode = 500;
+                res.end('Issue Creating User');
+            } finally {
+                // todo
+            }
         });
     }
     else {
