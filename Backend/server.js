@@ -230,12 +230,35 @@ const server = http.createServer(async (req, res) => {
         req.on('data', chunk => {
             body += chunk.toString(); // Append each chunk to the body string
         });
-
         req.on('end', async () => {
            res.statusCode = 200;
            
-           let sqlQuery = ``
+           let parsedbody = JSON.parse(body);
+
+           try {
+                // Initial Query
+                // TODO Make USER ID Encrypted on frontend
+                let sqlQuery = `Insert INTO collection ("userID", "collectionTitle")
+                VALUES ('${parsedbody.user}', '${parsedbody.title}')`
+
+                let createCollection = await client.query(sqlQuery);
+
+                console.log(createCollection.rowCount);
+
+                res.statusCode = 201;
+                res.end('Collection Created');
+           } catch (err) {
+                console.log(err);
+                res.statusCode = 400;
+                res.end('Issue Creating Collection');
+           } finally {
+               // todo
+           }
+
         })
+    }
+    else if (parsedUrl.pathname = 'getCollections' && method === 'GET') {
+        // todo
     }
     else {
         // Handle all other unmatched routes
