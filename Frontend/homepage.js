@@ -19,7 +19,9 @@ class homepage {
         let createCB = this.createElem(mainDiv, 'createCB', 'empty', 'button');
         createCB.textContent = '+ Create collection';
 
-        createCB.addEventListner('click', this.createCollection)
+        let createCTBX = this.createElem(mainDiv, 'collectionBox', 'text', 'input');
+
+        createCB.addEventListener('click', this.createCollection)
 
         // let card1 = this.createCard(mainDiv);
         // let card2 = this.createCard(mainDiv);
@@ -27,6 +29,14 @@ class homepage {
     }
 
     createCollection = async () => {
+        
+        const title = document.getElementById('collectionBox');
+
+        let postdata = {
+            user: '86',
+            title: title
+        }
+
         // Fetch the CollectionCreation API
         const response = await fetch(baseURL + 'createCollection', {
             method: 'POST',
@@ -35,6 +45,20 @@ class homepage {
             },
             body: JSON.stringify(postdata)
         });
+
+        if (!response.ok) {
+            console.log('Collection Creation Failed');
+        }
+        else if (response.ok) {
+            console.log('Collection Creation Suceeded');
+
+            const homepageDiv = document.getElementById('homepageDiv');
+            
+            this.createCard(homepageDiv, title.value);
+        }
+        else {
+            // todo 
+        }
     }
 
     createElem(mainElm, id, type, element) {
@@ -53,10 +77,10 @@ class homepage {
         return elem;
     }
 
-    createCard(mainElm) {
+    createCard(mainElm, cardTitle) {
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
-        card.textContent = 'Test Card';
+        card.textContent = cardTitle;
         mainElm.appendChild(card);
     }
 }

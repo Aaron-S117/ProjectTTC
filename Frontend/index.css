@@ -53,6 +53,7 @@
 
 #createCB {
     margin-bottom: 10px;
+    margin-right: 5px;
     border-radius: 5px;
     border: solid rgba(0,0,0,.5) 1px;
     background-color: rgba(39, 77, 112, 0.8);
