@@ -51,6 +51,13 @@
     border-bottom: solid blue 2px;
 }
 
+#createCB {
+    background-color: rgba(0,0,0,0);
+    border: 0;
+    color: blue;
+    padding-bottom: 10px;
+}
+
 /* body {
     position: absolute;
     top: 25vh;

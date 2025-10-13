@@ -14,6 +14,9 @@ class homepage {
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = 'Homepage';
 
+        let createCB = this.createElem(mainDiv, 'createCB', 'empty', 'button');
+        createCB.textContent = '+ Create collection';
+
         let card1 = this.createCard(mainDiv);
         let card2 = this.createCard(mainDiv);
         let card3 = this.createCard(mainDiv);
