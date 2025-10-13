@@ -19,8 +19,13 @@ async function HandleAccountCreation() {
 async function HandleLogin() {
 
     const loginImport = await import('./login.js');
-    loginImport.loginWorkflow();
-    
+    let verify = await loginImport.loginWorkflow();
+
+    if (verify === true) {
+        HandleHomepage();
+    }
+    else {
+    }
 }
 
 async function HandleHomepage() {

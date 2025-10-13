@@ -34,23 +34,26 @@ export async function loginWorkflow() {
         Password: Password
     }
 
-    const loginData = await fetch(baseURL + 'UserLogin', {
+    const response = await fetch(baseURL + 'UserLogin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(postdata)
-    })
-    .then(async (response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    });
 
-        const logindata = await response.blob()
-        return loginData;
-    })
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+    }
 
-    console.log('Username: ' + Username + '. Password: ' + Password); 
+    let result = await response.json();
+
+    if (result === 'Account Match'){
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 class loginHelper {

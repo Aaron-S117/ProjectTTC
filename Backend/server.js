@@ -112,6 +112,18 @@ const backendPort = process.env.backendPort;
 // Creates server and defines paths
 const server = http.createServer(async (req, res) => {
     res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); // Allow POST for /UserLogin
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Allow the Content-Type header
+
+    if (req.method === 'OPTIONS') {
+        // Respond with a 200 OK status for preflight requests
+        // A 204 No Content is also a valid alternative
+        res.writeHead(200); 
+        res.end();
+        return; // End the response here so it doesn't fall through to other handlers
+    }
 
     const {method, url} = req;
 
@@ -149,32 +161,41 @@ const server = http.createServer(async (req, res) => {
         req.on('end', async () => {
             let parsedbody = JSON.parse(body)
             if (!parsedbody.Username || !parsedbody.Password) {
-                req.statusCode = 400;
+                res.statusCode = 400;
                 res.end('Bad Request, Username or Password missing');
             }
             
             try {
+
                 let sqlQuery = `SELECT "Username", "Password" FROM users 
                 WHERE "Username" = '${parsedbody.Username}' and "Password" = '${parsedbody.Password}'`
-                console.log(sqlQuery);
 
                 let findUser = await client.query(sqlQuery) ;
 
                 if(findUser.rows.length === 0) {
-                    req.statusCode = 402
+                    res.statusCode = 402
                     console.log('Account not found');
                     res.end("Incorrect Username or Password");
+                    return;
                 }
 
                 console.log('Account Match');
-                req.statusCode = 200;
-                res.end('Account Match');
+                res.statusCode = 200;
+                res.end(JSON.stringify('Account Match'));
             } catch(err) {
                 console.error(err);
+                res.statusCode = 500;
                 res.end();
+            } finally {
+                // todo
             }
 
         });
+    }
+    else {
+        // Handle all other unmatched routes
+        res.statusCode = 404;
+        res.end(JSON.stringify({ error: 'Not Found' }));
     }
 })
 
