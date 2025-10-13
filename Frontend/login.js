@@ -21,9 +21,10 @@ export async function loginWorkflow() {
     const usernameBox = document.getElementById("Username");
     const passwordBox = document.getElementById("Password");
 
+    // Checks if either Username of Password textbox values are empty
     if (!usernameBox.value || !passwordBox.value) {
         console.log('Insufficient Information');
-
+        return false;
     }
 
     let Username = usernameBox.value;
@@ -34,6 +35,7 @@ export async function loginWorkflow() {
         Password: Password
     }
 
+    // Fetch the UserLogin API
     const response = await fetch(baseURL + 'UserLogin', {
         method: 'POST',
         headers: {
@@ -61,8 +63,6 @@ class loginHelper {
         // todo
         console.log('stuff');
     }
-
-
 }
 
 // Class for setting up the account creation page
@@ -83,9 +83,54 @@ class createAccount {
     
         return elem;
     }
+
+    SubmitAccount = async () => {
+
+        const usernameBox = document.getElementById("usernameBox");
+        const passwordBox = document.getElementById("passwordBox");
+
+            // Checks if either Username of Password textbox values are empty
+        if (!usernameBox.value || !passwordBox.value) {
+            console.log('Insufficient Information');
+            return false;
+        }
+
+        let Username = usernameBox.value;
+        let Password = passwordBox.value;
+
+        let postdata = {
+            Username: Username,
+            Password: Password
+        }
+
+            // Fetch the UserLogin API
+        const response = await fetch(baseURL + 'UserCreation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postdata)
+        });
+
+        if(response.ok === false) {
+            console.log('Issue Creating Account');
+            alert('Issue Creating Account');
+
+            return false;
+        }
+        else if (response.ok === true) {
+            console.log('Account Created');
+            location.reload();
+
+            alert('Account Created, please login!');
+            return true;
+        }
+        else {
+            //todo
+        }
+    }
     
     carFormCreation(mainElm) {
-
 
         let title = this.createElem(mainElm, 'titleText', 'empty', 'h2');
         title.textContent = 'Creating Account...';
@@ -101,8 +146,10 @@ class createAccount {
         let createButton = this.createElem(mainElm, 'createButton', 'empty', 'button')
         createButton.textContent = 'Submit Account';
 
+        let submitRes = createButton.addEventListener('click', this.SubmitAccount);
+
     }
-    
+
 }
 
 

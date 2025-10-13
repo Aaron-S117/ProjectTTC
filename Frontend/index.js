@@ -1,4 +1,4 @@
-let page = '';
+let page;
 
 function verifyLogin() {
     const loginDiv = document.getElementById('login');
@@ -25,6 +25,7 @@ async function HandleLogin() {
         HandleHomepage();
     }
     else {
+        alert('Incorrect Username or Password');
     }
 }
 

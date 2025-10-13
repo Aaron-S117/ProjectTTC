@@ -172,7 +172,7 @@ const server = http.createServer(async (req, res) => {
                 let findUser = await client.query(sqlQuery) ;
 
                 if(findUser.rows.length === 0) {
-                    res.statusCode = 402
+                    res.statusCode = 403
                     res.end("Incorrect Username or Password");
                     return;
                 }
