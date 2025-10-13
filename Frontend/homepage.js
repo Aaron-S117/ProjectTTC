@@ -1,3 +1,5 @@
+const baseURL = 'http://localhost:3000/'
+
 export function homepageHandler() {
     let homePageHandler = new homepage;
     homePageHandler.createHomePage();
@@ -17,9 +19,22 @@ class homepage {
         let createCB = this.createElem(mainDiv, 'createCB', 'empty', 'button');
         createCB.textContent = '+ Create collection';
 
-        let card1 = this.createCard(mainDiv);
-        let card2 = this.createCard(mainDiv);
-        let card3 = this.createCard(mainDiv);
+        createCB.addEventListner('click', this.createCollection)
+
+        // let card1 = this.createCard(mainDiv);
+        // let card2 = this.createCard(mainDiv);
+        // let card3 = this.createCard(mainDiv);
+    }
+
+    createCollection = async () => {
+        // Fetch the CollectionCreation API
+        const response = await fetch(baseURL + 'createCollection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postdata)
+        });
     }
 
     createElem(mainElm, id, type, element) {

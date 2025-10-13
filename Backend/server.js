@@ -223,6 +223,20 @@ const server = http.createServer(async (req, res) => {
             }
         });
     }
+    else if (parsedUrl.pathname = 'createCollection' && method == 'POST') {
+        let body = '';
+
+        // Used to get the request body. Creates a event listener that takes time to complete
+        req.on('data', chunk => {
+            body += chunk.toString(); // Append each chunk to the body string
+        });
+
+        req.on('end', async () => {
+           res.statusCode = 200;
+           
+           let sqlQuery = ``
+        })
+    }
     else {
         // Handle all other unmatched routes
         res.statusCode = 404;

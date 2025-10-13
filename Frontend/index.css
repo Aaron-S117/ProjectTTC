@@ -65,6 +65,13 @@
     border: solid black 1px;
 }
 
+#createCB:active {
+    transform: translateY(-1px);
+    border: solid black 1px;
+}
+
+
+
 /* body {
     position: absolute;
     top: 25vh;
