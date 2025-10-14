@@ -23,18 +23,53 @@ class homepage {
 
         createCB.addEventListener('click', this.createCollection)
 
+        let retrieveCollections = this.retrieveCollection();
+
         // let card1 = this.createCard(mainDiv);
         // let card2 = this.createCard(mainDiv);
         // let card3 = this.createCard(mainDiv);
     }
 
+    retrieveCollection = async () => {
+
+        const userID = localStorage.getItem('userID');
+
+        const response = await fetch(baseURL + 'retrieveCollection?userID=' + userID, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            console.log('Collection Retrieval Failed');
+        }
+        else if (response.ok) {
+            console.log('Collection Retrieval Suceeded');
+
+            const homepageDiv = document.getElementById('homepageDiv');
+
+            let data = await response.json();
+
+            for (const collection of data) {
+                let colCard = this.createCard(homepageDiv, collection.collectionTitle);
+            }
+            
+            // this.createCard(homepageDiv, title.value);
+        }
+        else {
+            // todo 
+        }
+    }
+
     createCollection = async () => {
         
         const title = document.getElementById('collectionBox');
+        const userID = localStorage.getItem('userID');
 
         let postdata = {
-            user: '86',
-            title: title
+            user: userID,
+            title: title.value
         }
 
         // Fetch the CollectionCreation API
