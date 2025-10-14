@@ -1,4 +1,4 @@
-import http, {ServerResponse} from "http";
+import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
 import { json } from "stream/consumers";
 import { time } from "console";
@@ -130,7 +130,10 @@ const server = http.createServer(async (req, res) => {
     // creates main url for path splicing
     const parsedUrl = new URL(req.url, baseURL);
     // general query parameter variable for later access
-    const queryParams = parsedUrl.searchParams;
+    const urlParams = parsedUrl.searchParams;
+
+    // get param named name
+    // urlParams.get('name');
 
     if (parsedUrl.pathname === "/test" && method === "GET") {
         let currentTime = new Date();
@@ -270,8 +273,25 @@ const server = http.createServer(async (req, res) => {
 
         })
     }
-    else if (parsedUrl.pathname = 'getCollections' && method === 'GET') {
-        // todo
+    else if (parsedUrl.pathname = 'getCollections' && urlParams.get('userID') != '' && method === 'GET') {
+
+        let userID = urlParams.get('userID');
+
+        let sqlQuery = `SELECT "collectionTitle" FROM collection
+        WHERE "userID" = ${userID}`
+        try {
+            let getCollection = await client.query(sqlQuery);
+
+            console.log(getCollection.rows);
+    
+            res.end(JSON.stringify(getCollection.rows));
+        } catch (err) {
+            res.statusCode = 500;
+            res.end('Issue getting collection')
+        } finally {
+            // todo
+        }
+
     }
     else {
         // Handle all other unmatched routes
