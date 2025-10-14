@@ -76,6 +76,7 @@ async function HandleLogin() {
     
         let result = await response.json();
 
+        localStorage.setItem('username', Username);
         localStorage.setItem('userID', result);
         localStorage.setItem('lastLogin', Date.now());
 

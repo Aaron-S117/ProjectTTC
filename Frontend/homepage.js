@@ -8,13 +8,16 @@ export function homepageHandler() {
 class homepage {
 
     createHomePage() {
+
+        let usernameStored = localStorage.getItem('username');
+
         const body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
         
         let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
-        homepageTitle.textContent = 'Homepage';
+        homepageTitle.textContent = usernameStored + `'s Homepage`;
 
         let createCB = this.createElem(mainDiv, 'createCB', 'empty', 'button');
         createCB.textContent = '+ Create collection';
@@ -24,10 +27,6 @@ class homepage {
         createCB.addEventListener('click', this.createCollection)
 
         let retrieveCollections = this.retrieveCollection();
-
-        // let card1 = this.createCard(mainDiv);
-        // let card2 = this.createCard(mainDiv);
-        // let card3 = this.createCard(mainDiv);
     }
 
     retrieveCollection = async () => {

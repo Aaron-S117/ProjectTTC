@@ -42,19 +42,20 @@ try {
         "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
         "userID" integer NOT NULL,
         "collectionTitle" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+        "collectionSummary" text,
         "CreatedDate" timestamp with time zone DEFAULT now(),
         "ChangeDate" time with time zone,
         CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
         CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
-            INCLUDE("ID"),
+                    INCLUDE("ID"),
         CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
-            REFERENCES Users ("ID") MATCH SIMPLE
+            REFERENCES users ("ID") MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE
-    )
-    
+        )
+        
     TABLESPACE pg_default;
-    
+        
     ALTER TABLE IF EXISTS collection
         OWNER to postgres;
     
