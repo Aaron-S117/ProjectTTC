@@ -1,5 +1,25 @@
 const baseURL = 'http://localhost:3000/'
 
+let storedUser = localStorage.getItem('userID');
+let storedPage = localStorage.getItem('page');
+
+if (storedUser != ''){
+    switch(storedPage) {
+        case '':
+            console.log('No page, going to login');
+            break;
+        case 'Homepage':
+            console.log('Going to homepage');
+            HandleHomepage();
+            break;
+        default:
+            console.log('Nothing of importance happened');
+    }
+}   
+else {
+    console.log('continue with life');
+}
+
 function verifyLogin() {
     const loginDiv = document.getElementById('login');
 
