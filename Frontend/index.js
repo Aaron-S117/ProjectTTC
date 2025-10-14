@@ -1,4 +1,4 @@
-let page;
+const baseURL = 'http://localhost:3000/'
 
 function verifyLogin() {
     const loginDiv = document.getElementById('login');
@@ -22,7 +22,45 @@ async function HandleLogin() {
     let verify = await loginImport.loginWorkflow();
 
     if (verify === true) {
-        HandleHomepage();
+
+        const usernameBox = document.getElementById("Username");
+        const passwordBox = document.getElementById("Password");
+    
+        // Checks if either Username of Password textbox values are empty
+        if (!usernameBox.value || !passwordBox.value) {
+            console.log('Insufficient Information');
+            return false;
+        }
+    
+        let Username = usernameBox.value;
+        let Password = passwordBox.value;
+
+        let postdata = {
+            Username: Username,
+            Password: Password,
+            login: false
+        }
+    
+        // Fetch the UserLogin API
+        const response = await fetch(baseURL + 'UserLogin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postdata)
+        });
+    
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+    
+        let result = await response.json();
+
+        localStorage.setItem('userID', result);
+        localStorage.setItem('lastLogin', Date.now());
+
+        // Create Homepage
+        await HandleHomepage();
     }
     else {
         alert('Incorrect Username or Password');
@@ -35,7 +73,7 @@ async function HandleHomepage() {
     const homepageImport = await import ('./homepage.js');
     homepageImport.homepageHandler();
 
-    page = 'HomePage';
+    localStorage.setItem('page', 'Homepage');
 }
 
 const CARButton = document.getElementById("CreateAccountLink");

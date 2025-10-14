@@ -166,7 +166,7 @@ const server = http.createServer(async (req, res) => {
             }
             
             try {
-                let sqlQuery = `SELECT "Username", "Password" FROM users 
+                let sqlQuery = `SELECT "ID", "Username", "Password" FROM users 
                 WHERE "Username" = '${parsedbody.Username}' and "Password" = '${parsedbody.Password}'`
 
                 let findUser = await client.query(sqlQuery) ;
@@ -176,8 +176,21 @@ const server = http.createServer(async (req, res) => {
                     res.end("Incorrect Username or Password");
                     return;
                 }
+
                 res.statusCode = 200;
-                res.end(JSON.stringify('Account Match'));
+                if (parsedbody.login === false) {
+                    
+                    let userRow = findUser.rows;   
+                    let userID = userRow.map(user => user.ID);
+                    console.log(userID.toString());
+
+                    res.end(JSON.stringify(userID.toString()))
+                }
+                else {
+                    console.log('Account Match');
+                    res.end(JSON.stringify('Account Match'));
+                }
+
             } catch(err) {
                 console.error(err);
                 res.statusCode = 500;

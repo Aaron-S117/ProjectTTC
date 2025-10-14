@@ -32,7 +32,8 @@ export async function loginWorkflow() {
 
     let postdata = {
         Username: Username,
-        Password: Password
+        Password: Password,
+        login: true
     }
 
     // Fetch the UserLogin API
@@ -50,7 +51,7 @@ export async function loginWorkflow() {
 
     let result = await response.json();
 
-    if (result === 'Account Match'){
+    if (result.startsWith('Account Match') === true){
         return true;
     }
     else {
