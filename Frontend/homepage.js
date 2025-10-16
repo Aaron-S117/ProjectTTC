@@ -16,6 +16,7 @@ class homepage {
         
         let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
+
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = usernameStored + `'s Homepage`;
 
@@ -111,10 +112,40 @@ class homepage {
         return elem;
     }
 
+    setPosition(elm, clientX, clientY, attempt) {
+        elm.style.position = 'absolute';
+        elm.style.top = clientY - 300;
+        elm.style.left = clientX - 1000;
+    }
+
     createCard(mainElm, cardTitle) {
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
+        card.setAttribute('draggable', 'true');
         card.textContent = cardTitle;
         mainElm.appendChild(card);
+
+        card.addEventListener("dragstart", (event) => {
+            event.dataTransfer.setData("text/plain", cardTitle);
+            event.dataTransfer.setDragImage(card, 150, 50);
+            console.log('starting drag');
+
+            let attempt = 0;
+
+            card.addEventListener("drag", (dragEvent) => {
+                const clientX = dragEvent.clientX;
+                const clientY = dragEvent.clientY;
+
+                if (attempt === 10) {
+                    this.setPosition(card, clientX, clientY, attempt);
+                    attempt = 0;
+                } 
+                else {
+                    attempt = attempt + 1;
+                }
+            }) 
+
+            
+        })
     }
 }
