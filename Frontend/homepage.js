@@ -17,6 +17,33 @@ class homepage {
         let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
 
+        mainDiv.addEventListener("dragover", (event) => {
+            event.preventDefault();
+
+            if (mainDiv.classList.contains('divDrop') == false) {
+                mainDiv.classList.toggle('divDrop');
+            }
+            else {
+                //todo
+            }
+        })  
+
+        mainDiv.addEventListener("drop", (event) => {
+            event.preventDefault();
+
+            mainDiv.classList.toggle('divDrop');
+
+            let dropped = event.dataTransfer.getData("text/html");
+            
+            let droppedParsed = new DOMParser().parseFromString(dropped, 'text/html');
+            let droppedElement = droppedParsed.firstChild.childNodes[1].firstChild
+
+            this.createCard(mainDiv, droppedElement.textContent);
+            
+
+            console.log('element dropped');
+        })
+
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = usernameStored + `'s Homepage`;
 
@@ -127,8 +154,11 @@ class homepage {
 
         card.addEventListener("dragstart", (event) => {
             event.dataTransfer.setData("text/plain", cardTitle);
+            event.dataTransfer.setData("text/html", card.outerHTML);
+
             let fakeDrag = document.createElement("span");
             fakeDrag.setAttribute('style', 'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
+
             event.dataTransfer.setDragImage(fakeDrag, 0, 0);
             console.log('starting drag');
 
@@ -147,6 +177,11 @@ class homepage {
                     attempt = attempt + 1;
                 }
             })     
+        })
+
+        card.addEventListener("dragend", (event) => {
+            console.log('drag ended');
+            card.remove();
         })
     }
 }
