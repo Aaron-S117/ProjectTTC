@@ -127,25 +127,26 @@ class homepage {
 
         card.addEventListener("dragstart", (event) => {
             event.dataTransfer.setData("text/plain", cardTitle);
-            event.dataTransfer.setDragImage(card, 150, 50);
+            let fakeDrag = document.createElement("span");
+            fakeDrag.setAttribute('style', 'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
+            event.dataTransfer.setDragImage(fakeDrag, 0, 0);
             console.log('starting drag');
 
             let attempt = 0;
 
             card.addEventListener("drag", (dragEvent) => {
-                const clientX = dragEvent.clientX;
-                const clientY = dragEvent.clientY;
 
                 if (attempt === 10) {
+                    const clientX = dragEvent.clientX;
+                    const clientY = dragEvent.clientY;
+
                     this.setPosition(card, clientX, clientY, attempt);
                     attempt = 0;
                 } 
                 else {
                     attempt = attempt + 1;
                 }
-            }) 
-
-            
+            })     
         })
     }
 }
