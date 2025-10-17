@@ -1,18 +1,22 @@
 const baseURL = 'http://localhost:3000/'
 
-export function homepageHandler() {
+export async function homepageHandler() {
     let homePageHandler = new homepage;
-    homePageHandler.createHomePage();
+    await homePageHandler.createHomePage();
 }
 
 class homepage {
 
-    createHomePage() {
+    async createHomePage() {
 
         let usernameStored = localStorage.getItem('username');
 
         const body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
+
+        let widgets = await import('./usefulWidgets.js');
+
+        let sidebar = new widgets.setSidebar(body);
         
         let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
