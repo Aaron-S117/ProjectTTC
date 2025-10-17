@@ -2,6 +2,7 @@ const baseURL = 'http://localhost:3000/'
 
 let storedUser = localStorage.getItem('userID');
 let storedPage = localStorage.getItem('page');
+let sidebarOpen = false;
 
 if (storedUser != ''){
     switch(storedPage) {
@@ -92,7 +93,7 @@ async function HandleHomepage() {
     console.log('This is the homepage');
 
     const homepageImport = await import ('./homepage.js');
-    homepageImport.homepageHandler();
+    await homepageImport.homepageHandler();
 
     localStorage.setItem('page', 'Homepage');
 }
