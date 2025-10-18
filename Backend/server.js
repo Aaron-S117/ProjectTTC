@@ -240,7 +240,7 @@ const server = http.createServer(async (req, res) => {
             }
         });
     }
-    else if (parsedUrl.pathname = 'createCollection' && method == 'POST') {
+    else if (parsedUrl.pathname === '/createCollection' && method == 'POST') {
         let body = '';
 
         // Used to get the request body. Creates a event listener that takes time to complete
@@ -274,7 +274,7 @@ const server = http.createServer(async (req, res) => {
 
         })
     }
-    else if (parsedUrl.pathname = 'getCollections' && urlParams.get('userID') != '' && method === 'GET') {
+    else if (parsedUrl.pathname === '/getCollections' && urlParams.get('userID') != '' && method === 'GET') {
 
         let userID = urlParams.get('userID');
 
@@ -284,6 +284,8 @@ const server = http.createServer(async (req, res) => {
             let getCollection = await client.query(sqlQuery);
 
             console.log(getCollection.rows);
+
+            res.statusCode = 200;
     
             res.end(JSON.stringify(getCollection.rows));
         } catch (err) {
@@ -292,7 +294,25 @@ const server = http.createServer(async (req, res) => {
         } finally {
             // todo
         }
+    }
+    else if (parsedUrl.pathname === '/getCollectionItems' && urlParams.get('collectionID') != '' && method === 'GET') {
 
+        res.statusCode = 200;
+        let collectionID = urlParams.get('collectionID');
+
+        let sqlQuery = `SELECT * FROM item
+        where "collectionID" = ${collectionID}`;
+    
+        try {
+            let getColItems = await client.query(sqlQuery);
+            res.statusCode = 200;
+            res.end(JSON.stringify(getColItems.rows));
+            
+        }catch (err) {
+            res.statusCode = 500;
+            console.log(err);
+            res.end('Issue getting collection items');
+        }
     }
     else {
         // Handle all other unmatched routes
