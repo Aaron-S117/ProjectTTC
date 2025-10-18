@@ -58,7 +58,7 @@ try {
         
     ALTER TABLE IF EXISTS collection
         OWNER to postgres;
-    
+        
     CREATE TABLE IF NOT EXISTS item
     (
         "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -69,13 +69,16 @@ try {
         CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
         CONSTRAINT "Unique Item ID" UNIQUE ("ID")
             INCLUDE("ID"),
-        CONSTRAINT "item_collectionID_fkey" FOREIGN KEY ("collectionID")
+        CONSTRAINT item_collection FOREIGN KEY ("collectionID")
             REFERENCES collection ("ID") MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE
     )
-    
-    TABLESPACE pg_default;`)
+
+    TABLESPACE pg_default;
+
+    ALTER TABLE IF EXISTS item
+        OWNER to postgres;`)
     
 
     // const res2 = await client.query('SELECT NOW()');
