@@ -37,7 +37,7 @@ class homepage {
 
         const userID = localStorage.getItem('userID');
 
-        const response = await fetch(baseURL + 'retrieveCollection?userID=' + userID, {
+        const response = await fetch(baseURL + 'getCollections?userID=' + userID, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -120,5 +120,20 @@ class homepage {
         card.setAttribute('class', 'card');
         card.textContent = cardTitle;
         mainElm.appendChild(card);
+
+        let itemPageCreator = new itemPage;
+
+        card.addEventListener('click', (event) => {
+            itemPageCreator.createItempage(event);
+        });
+    }
+}
+
+class itemPage {
+    createItempage(event) {
+        console.log(event.currentTarget);
+    }
+    retrieveCollectionItem(){
+
     }
 }
