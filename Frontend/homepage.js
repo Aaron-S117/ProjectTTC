@@ -121,7 +121,9 @@ class itemPage {
         let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
 
-        
+        let pageTitle = elmC.createElem(mainDiv, 'itemsTitle', 'empty', 'h2');
+        pageTitle.textContent = 'Collection Items';
+        mainDiv.appendChild(pageTitle);
 
         elmC.createItemCard(mainDiv, 'Test Item'); 
 
