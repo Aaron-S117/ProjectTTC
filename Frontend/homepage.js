@@ -164,17 +164,36 @@ class elmCreator {
     }
 
     createItemCard(mainElm, itemTitle) {
-        let doubleCard = document.createElement('div');
-        doubleCard.setAttribute('class', 'doubleCard');
-        mainElm.appendChild(doubleCard);
+        let counter = 0;
 
-        let firstCard = document.createElement('div');
-        firstCard.textContent = 'Test Item 1';
+        while (counter < 20) {
+            let doubleCard = document.createElement('div');
+            doubleCard.setAttribute('class', 'doubleCard');
+            mainElm.appendChild(doubleCard);
+            
+            let firstCard = document.createElement('div');
+            firstCard.textContent = 'Test Item 1: ' + counter;
+            firstCard.setAttribute('class', 'card1');
+    
+            let secondCard = document.createElement('div');
+            secondCard.textContent = 'Test Item 2' + counter;
+            secondCard.setAttribute('class', 'card2');
 
-        let secondCard = document.createElement('div');
-        secondCard.textContent = 'Test Item 2';
+            doubleCard.appendChild(firstCard);
+            doubleCard.appendChild(secondCard);
 
-        doubleCard.appendChild(firstCard);
-        doubleCard.appendChild(secondCard);
+            counter++;
+        }
+
+        // let firstCard = document.createElement('div');
+        // firstCard.textContent = 'Test Item 1';
+        // firstCard.setAttribute('class', 'card1');
+
+        // let secondCard = document.createElement('div');
+        // secondCard.textContent = 'Test Item 2';
+        // secondCard.setAttribute('class', 'card2');
+
+        // doubleCard.appendChild(firstCard);
+        // doubleCard.appendChild(secondCard);
     }
 }

@@ -71,11 +71,6 @@
     border: solid black 1px;
 }
 
-.doubleCard {
-    display: flex;
-    gap: 1rem;
-}
-
 /* body {
     position: absolute;
     top: 25vh;
@@ -156,3 +151,29 @@
     margin-top: 10px;
     transform: scale(1.1);
 }
+
+.doubleCard {
+    display: flex;
+    gap: 1rem;
+    margin-left: -23vh;
+}
+
+.card1, .card2 {
+    display: absolute;
+    background-color: lightgrey;
+    border: solid grey 1px;
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    min-width: 300px;
+    min-height: 100px;
+    transition: all 2s;
+}
+
+.card1:hover, .card2:hover {
+    background-color: lightblue;
+    transform: scale(1.1);
+    transition: all 1s;
+}
+
