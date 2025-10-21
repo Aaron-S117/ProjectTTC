@@ -69,23 +69,6 @@ class sidebarBuilder {
         sidebarContent.id = 'sidebarContent';
         sidebarContent.className = 'sidebarContentsClosed';
 
-        // Button: More Tasks
-        const moreTasksDiv = document.createElement('div');
-        moreTasksDiv.className = 'sidebarButton';
-        const moreTasksButton = document.createElement('button');
-        moreTasksButton.textContent = 'More Tasks';
-        moreTasksDiv.appendChild(moreTasksButton);
-
-        // Button: Less Tasks
-        const lessTasksDiv = document.createElement('div');
-        lessTasksDiv.className = 'sidebarButton';
-        const lessTasksButton = document.createElement('button');
-        lessTasksButton.textContent = 'Less Tasks';
-        lessTasksDiv.appendChild(lessTasksButton);
-
-        sidebarContent.appendChild(moreTasksDiv);
-        sidebarContent.appendChild(lessTasksDiv);
-
         // Combine all
         sidebar.appendChild(sidebarButtonDiv);
         sidebar.appendChild(sidebarContent);

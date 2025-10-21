@@ -71,6 +71,11 @@
     border: solid black 1px;
 }
 
+.doubleCard {
+    display: flex;
+    gap: 1rem;
+}
+
 /* body {
     position: absolute;
     top: 25vh;

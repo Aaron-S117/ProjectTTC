@@ -9,30 +9,38 @@ class homepage {
 
     async createHomePage() {
 
+        let elmC = new elmCreator;
+
         let usernameStored = localStorage.getItem('username');
 
+        // Retrieve and clear body tag
         const body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
 
+        // import sidebar file for later appending
         let widgets = await import('./usefulWidgets.js');
-
         let sidebar = new widgets.setSidebar(body);
         
-        let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
+        // create the main div where all the collection cards will be stored
+        let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
-        let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
+
+        // create homepage title
+        let homepageTitle = elmC.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = usernameStored + `'s Homepage`;
 
-        let createCB = this.createElem(mainDiv, 'createCB', 'empty', 'button');
+        // Generate create collection button
+        let createCB = elmC.createElem(mainDiv, 'createCB', 'empty', 'button');
         createCB.textContent = '+ Create collection';
 
-        let createCTBX = this.createElem(mainDiv, 'collectionBox', 'text', 'input');
-
+        // Generate create collection textbox and event handler for appending collection to database
+        let createCTBX = elmC.createElem(mainDiv, 'collectionBox', 'text', 'input');
         createCB.addEventListener('click', this.createCollection)
 
         let retrieveCollections = this.retrieveCollection();
     }
 
+    // Gets array of collections based off the user's ID
     retrieveCollection = async () => {
 
         const userID = localStorage.getItem('userID');
@@ -50,15 +58,16 @@ class homepage {
         else if (response.ok) {
             console.log('Collection Retrieval Suceeded');
 
+            let elmC = new elmCreator;
+
             const homepageDiv = document.getElementById('homepageDiv');
 
             let data = await response.json();
 
             for (const collection of data) {
-                let colCard = this.createCard(homepageDiv, collection.collectionTitle);
+                let colCard = elmC.createCard(homepageDiv, collection.collectionTitle);
             }
             
-            // this.createCard(homepageDiv, title.value);
         }
         else {
             // todo 
@@ -98,7 +107,31 @@ class homepage {
             // todo 
         }
     }
+}
 
+class itemPage {
+    createItempage(event) {
+
+        let elmC = new elmCreator;
+
+        let body = document.getElementsByTagName('body')[0];
+        body.innerHTML = '';
+
+        // create the main div where all the collection cards will be stored
+        let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
+        mainDiv.classList.add('mainDiv');
+
+        
+
+        elmC.createItemCard(mainDiv, 'Test Item'); 
+
+    }
+    retrieveCollectionItem(){
+        // todo 
+    }
+}
+
+class elmCreator {
     createElem(mainElm, id, type, element) {
 
         const elem = document.createElement(element);
@@ -127,13 +160,19 @@ class homepage {
             itemPageCreator.createItempage(event);
         });
     }
-}
 
-class itemPage {
-    createItempage(event) {
-        console.log(event.currentTarget);
-    }
-    retrieveCollectionItem(){
+    createItemCard(mainElm, itemTitle) {
+        let doubleCard = document.createElement('div');
+        doubleCard.setAttribute('class', 'doubleCard');
+        mainElm.appendChild(doubleCard);
 
+        let firstCard = document.createElement('div');
+        firstCard.textContent = 'Test Item 1';
+
+        let secondCard = document.createElement('div');
+        secondCard.textContent = 'Test Item 2';
+
+        doubleCard.appendChild(firstCard);
+        doubleCard.appendChild(secondCard);
     }
 }
