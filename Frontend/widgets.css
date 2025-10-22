@@ -10,3 +10,24 @@
     border-radius: 5px;
     z-index: 100;
 }
+
+#pHeaderDiv {
+    min-height: 25px;
+    border-bottom: 1px solid black;
+}
+
+#pExitButton {
+    float: right;
+    margin-top: 5px;
+    margin-right: 5px;
+    background-color: transparent;
+    border: 0;
+}
+
+#pExitButton:hover {
+    color: red;
+}
+
+#pExitButton:active {
+    transform: scale(.9);
+}

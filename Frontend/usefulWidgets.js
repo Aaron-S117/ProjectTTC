@@ -91,9 +91,17 @@ export class PopupModal {
 
         let popupDiv = document.createElement('div');
         popupDiv.setAttribute('class', 'popupDiv');
-        popupDiv.textContent = 'tset';
+        
+        let headerDiv = document.createElement('div');
+        headerDiv.setAttribute('ID', 'pHeaderDiv');
+
+        let exitButton = document.createElement('button');
+        exitButton.setAttribute('ID', 'pExitButton');
+        exitButton.textContent = 'X';
 
         body.appendChild(popupDiv);
+        popupDiv.appendChild(headerDiv);
+        headerDiv.appendChild(exitButton);
 
         this.includeCSSFile();
     }
