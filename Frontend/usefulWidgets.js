@@ -75,9 +75,7 @@ class sidebarBuilder {
 
         return sidebar;
     }
-
 }
-
 
 export class DataGrid {
 
@@ -89,6 +87,30 @@ export class DataView {
 
 export class PopupModal {
     createPopup() {
-        
+        let body = document.getElementsByTagName('body')[0];
+
+        let popupDiv = document.createElement('div');
+        popupDiv.setAttribute('class', 'popupDiv');
+        popupDiv.textContent = 'tset';
+
+        body.appendChild(popupDiv);
+
+        this.includeCSSFile();
+    }
+    includeCSSFile() {
+        let widgetFile = document.getElementById('widgetID');
+        if (!widgetFile) {
+            let head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = './widgets.css';
+            link.id = 'widgetID';
+
+            head.appendChild(link);
+        }
+        else {
+            console.log('widget file already loaded');
+        }
     }
 }
