@@ -18,10 +18,16 @@
 
 #pExitButton {
     float: right;
-    margin-top: 5px;
     margin-right: 5px;
+    margin-top: 5px;
     background-color: transparent;
     border: 0;
+}
+
+#pTitle {
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 #pExitButton:hover {

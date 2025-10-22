@@ -1,3 +1,5 @@
+var popupOpen = false;
+
 export function setSidebar(mainElm) {
 
     let create = new sidebarBuilder();
@@ -87,23 +89,43 @@ export class DataView {
 
 export class PopupModal {
     createPopup() {
-        let body = document.getElementsByTagName('body')[0];
 
-        let popupDiv = document.createElement('div');
-        popupDiv.setAttribute('class', 'popupDiv');
-        
-        let headerDiv = document.createElement('div');
-        headerDiv.setAttribute('ID', 'pHeaderDiv');
+        if(popupOpen === true) {
+            console.log('Popup already open!');
+        }
+        else {
 
-        let exitButton = document.createElement('button');
-        exitButton.setAttribute('ID', 'pExitButton');
-        exitButton.textContent = 'X';
+            let body = document.getElementsByTagName('body')[0];
 
-        body.appendChild(popupDiv);
-        popupDiv.appendChild(headerDiv);
-        headerDiv.appendChild(exitButton);
+            let popupDiv = document.createElement('div');
+            popupDiv.setAttribute('class', 'popupDiv');
+            
+            let headerDiv = document.createElement('div');
+            headerDiv.setAttribute('ID', 'pHeaderDiv');
+    
+            let title = document.createElement('h5');
+            title.textContent = 'Item Title';
+            title.setAttribute('ID', 'pTitle');
+    
+            let exitButton = document.createElement('button');
+            exitButton.setAttribute('ID', 'pExitButton');
+            exitButton.textContent = 'X';
+    
+            body.appendChild(popupDiv);
+            popupDiv.appendChild(headerDiv);
+            headerDiv.appendChild(title);
+            headerDiv.appendChild(exitButton);
+    
+            popupOpen = true;
+    
+            exitButton.addEventListener('click', () => {
+                this.exitPopup(popupDiv);
+    
+                popupOpen = false;
+            })
 
-        this.includeCSSFile();
+            this.includeCSSFile();
+        }
     }
     includeCSSFile() {
         let widgetFile = document.getElementById('widgetID');
@@ -120,5 +142,8 @@ export class PopupModal {
         else {
             console.log('widget file already loaded');
         }
+    }
+    exitPopup(mainElm) {
+        mainElm.outerHTML = '';
     }
 }
