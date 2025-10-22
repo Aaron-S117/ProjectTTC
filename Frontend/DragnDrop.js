@@ -2,8 +2,8 @@ export class Draggin {
     
     DragwithFullElm(ele, dragEle) {
         dragEle.addEventListener('dragstart', (event) => {
-            event.dataTransfer.setData("text/plain", ele.textcontent);
-            event.dataTransfer.setData("text/html", ele.outerHTML);
+            // event.dataTransfer.setData("text/plain", ele.textcontent);
+            // event.dataTransfer.setData("text/html", ele.outerHTML);
 
             let fakeDrag = document.createElement("span");
             fakeDrag.setAttribute('style', 'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
@@ -14,9 +14,7 @@ export class Draggin {
 
             dragEle.addEventListener("drag", (dragEvent) => {
 
-                console.log('trp')
-
-                if (attempt === 10) {
+                if (attempt === 5) {
                     const clientX = dragEvent.clientX;
                     const clientY = dragEvent.clientY;
 
