@@ -110,7 +110,7 @@ class homepage {
 }
 
 class itemPage {
-    createItempage(event) {
+    async createItempage(event) {
 
         let elmC = new elmCreator;
 
@@ -125,7 +125,7 @@ class itemPage {
         pageTitle.textContent = 'Collection Items';
         mainDiv.appendChild(pageTitle);
 
-        elmC.createItemCard(mainDiv, 'Test Item'); 
+        await elmC.createItemCard(mainDiv, 'Test Item'); 
 
     }
     retrieveCollectionItem(){
@@ -163,10 +163,10 @@ class elmCreator {
         });
     }
 
-    createItemCard(mainElm, itemTitle) {
+    async createItemCard(mainElm, itemTitle) {
         let counter = 0;
 
-        while (counter < 20) {
+        while (counter < 5) {
             let doubleCard = document.createElement('div');
             doubleCard.setAttribute('class', 'doubleCard');
             mainElm.appendChild(doubleCard);
@@ -176,11 +176,19 @@ class elmCreator {
             firstCard.setAttribute('class', 'card1');
     
             let secondCard = document.createElement('div');
-            secondCard.textContent = 'Test Item 2' + counter;
+            secondCard.textContent = 'Test Item 2: ' + counter;
             secondCard.setAttribute('class', 'card2');
 
             doubleCard.appendChild(firstCard);
             doubleCard.appendChild(secondCard);
+
+            let UW = await import('./usefulWidgets.js');
+
+            let itemPopup = new UW.PopupModal;
+
+            firstCard.addEventListener('click', (event) => {
+                itemPopup.createPopup();
+            });
 
             counter++;
         }
