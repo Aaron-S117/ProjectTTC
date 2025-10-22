@@ -58,7 +58,7 @@ try {
         
     ALTER TABLE IF EXISTS collection
         OWNER to postgres;
-    
+        
     CREATE TABLE IF NOT EXISTS item
     (
         "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -69,13 +69,16 @@ try {
         CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
         CONSTRAINT "Unique Item ID" UNIQUE ("ID")
             INCLUDE("ID"),
-        CONSTRAINT "item_collectionID_fkey" FOREIGN KEY ("collectionID")
+        CONSTRAINT item_collection FOREIGN KEY ("collectionID")
             REFERENCES collection ("ID") MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE
     )
-    
-    TABLESPACE pg_default;`)
+
+    TABLESPACE pg_default;
+
+    ALTER TABLE IF EXISTS item
+        OWNER to postgres;`)
     
 
     // const res2 = await client.query('SELECT NOW()');
@@ -240,7 +243,7 @@ const server = http.createServer(async (req, res) => {
             }
         });
     }
-    else if (parsedUrl.pathname = 'createCollection' && method == 'POST') {
+    else if (parsedUrl.pathname === '/createCollection' && method == 'POST') {
         let body = '';
 
         // Used to get the request body. Creates a event listener that takes time to complete
@@ -274,7 +277,7 @@ const server = http.createServer(async (req, res) => {
 
         })
     }
-    else if (parsedUrl.pathname = 'getCollections' && urlParams.get('userID') != '' && method === 'GET') {
+    else if (parsedUrl.pathname === '/getCollections' && urlParams.get('userID') != '' && method === 'GET') {
 
         let userID = urlParams.get('userID');
 
@@ -284,6 +287,8 @@ const server = http.createServer(async (req, res) => {
             let getCollection = await client.query(sqlQuery);
 
             console.log(getCollection.rows);
+
+            res.statusCode = 200;
     
             res.end(JSON.stringify(getCollection.rows));
         } catch (err) {
@@ -292,7 +297,25 @@ const server = http.createServer(async (req, res) => {
         } finally {
             // todo
         }
+    }
+    else if (parsedUrl.pathname === '/getCollectionItems' && urlParams.get('collectionID') != '' && method === 'GET') {
 
+        res.statusCode = 200;
+        let collectionID = urlParams.get('collectionID');
+
+        let sqlQuery = `SELECT * FROM item
+        where "collectionID" = ${collectionID}`;
+    
+        try {
+            let getColItems = await client.query(sqlQuery);
+            res.statusCode = 200;
+            res.end(JSON.stringify(getColItems.rows));
+            
+        }catch (err) {
+            res.statusCode = 500;
+            console.log(err);
+            res.end('Issue getting collection items');
+        }
     }
     else {
         // Handle all other unmatched routes

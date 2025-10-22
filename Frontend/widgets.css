@@ -1,0 +1,40 @@
+.popupDiv {
+    position: fixed;
+    top: 25vh;
+    left: 80vh;
+    height: 50vh;
+    width: 50vh;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    z-index: 100;
+    overflow-y: scroll;
+}
+
+#pHeaderDiv {
+    min-height: 25px;
+    border-bottom: 1px solid black;
+}
+
+#pExitButton {
+    float: right;
+    margin-right: 5px;
+    margin-top: 5px;
+    background-color: transparent;
+    border: 0;
+}
+
+#pTitle {
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#pExitButton:hover {
+    color: red;
+}
+
+#pExitButton:active {
+    transform: scale(.9);
+}

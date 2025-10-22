@@ -18,7 +18,7 @@
 
 .mainDiv {
     position: absolute;
-    top: 25vh;
+    top: 10vh;
     left: 90vh;
 }
 
@@ -76,3 +76,131 @@
     top: 25vh;
     left: 90vh;
 } */
+
+
+.sidebar {
+    width: 3%;
+    height: 100%;
+    position: fixed;
+    top: 8;
+    left: 0;
+    transition: all .15s ease-in;
+}
+.sidebar.active {
+    width: 10%;
+    transition-delay: .2s;
+    transition-property: all;
+    transition-duration: .2s;
+    transition-timing-function: ease-in-out;
+}
+
+.sidebarButton {
+    margin-left: 50px;
+    margin-top: 10px;
+    transform: scale(1.1);
+}
+#sidebarButton {
+    transition: all .15s ease-in;
+    margin-top: 5px;
+    margin-bottom: 7px;
+    margin-left: 5px;
+    border-radius: 20px;
+    border:1px solid grey;
+    box-shadow: 0px 3px lightgrey;
+}
+
+#sidebarButton:hover {
+    background:rgb(117, 160, 173);
+    border: 2px solid yellow;
+    box-shadow: 0 0;
+}
+
+#sidebarButton.active {
+    transform: translateX(15vh);
+    transition-delay: .2s;
+    transition-property: all;
+    transition-duration: .2s;
+    transition-timing-function: ease-in-out;
+}
+
+.sidebarButtonDiv {
+    border-right: 2px solid grey;
+    border-bottom: 2px solid grey;
+    width: 100%;
+    align-content: center;
+}
+
+.sidebarContentsClosed {
+    transform: translateX(-300%);
+    width: 100%;
+    height: 100%;
+    transition: all .15s ease-in;
+}
+
+.sidebarContentsOpened {
+    width: 100%;
+    height: 100%;
+    transform: translateX(0);
+    padding-top: 5px;
+    padding-bottom: 7px;
+    background-color: white;    
+    border-right: 2px solid grey;
+    transition: all .4s ease-in-out;
+
+}
+
+.doubleCard {
+    display: flex;
+    gap: 1rem;
+    margin-left: -23vh;
+}
+
+.card1, .card2 {
+    display: absolute;
+    background-color: lightgrey;
+    border: solid grey 1px;
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    min-width: 300px;
+    min-height: 100px;
+    transition: all 2s;
+}
+
+.card1:hover, .card2:hover {
+    background-color: lightblue;
+    transform: scale(1.1);
+    transition: all 1s;
+}
+
+#newItemNameDiv {
+    display: flex;
+}
+
+#newItemText {
+    margin-right: 10px;
+    margin-left: -50px;
+}
+
+#newItemNameBox {
+    height: 30px;
+    margin-top: 10px;
+    width: 85%;
+}
+
+#newItemDescDiv {
+    display: flex;
+}
+
+#newItemDescBox {
+    margin-top: 10px;
+    min-width: 32vh;
+    min-height: 100px;
+}
+
+#newItemDescText {
+    margin-right: 10px;
+    margin-left: 8px;
+}
+
