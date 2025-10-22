@@ -79,10 +79,16 @@ class sidebarBuilder {
 }
 
 
-class DataGrid {
+export class DataGrid {
 
 }
 
-class DataView {
+export class DataView {
 
+}
+
+export class PopupModal {
+    createPopup() {
+        
+    }
 }
