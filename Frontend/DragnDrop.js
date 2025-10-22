@@ -1,8 +1,30 @@
-class Draggin {
+export class Draggin {
     
-    startDrageEvent(ele) {
+    DragwithFullElm(ele) {
         ele.addEventListener('dragstart', (event) => {
-            // todo
+            event.dataTransfer.setData("text/plain", ele.textcontent);
+            event.dataTransfer.setData("text/html", ele.outerHTML);
+
+            let fakeDrag = document.createElement("span");
+            fakeDrag.setAttribute('style', 'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
+
+            event.dataTransfer.setDragImage(fakeDrag, 0, 0);
+
+            let attempt = 0;
+
+            ele.addEventListener("drag", (dragEvent) => {
+
+                if (attempt === 10) {
+                    const clientX = dragEvent.clientX;
+                    const clientY = dragEvent.clientY;
+
+                    this.setPosition(ele, clientX, clientY, attempt);
+                    attempt = 0;
+                } 
+                else {
+                    attempt = attempt + 1;
+                }
+            })     
         })
 
         ele.addEventListener('dragover', (event) => {
@@ -10,10 +32,38 @@ class Draggin {
         })
     }
 
+    // mainDiv.addEventListener("dragover", (event) => {
+    //     event.preventDefault();
+
+    //     if (mainDiv.classList.contains('divDrop') == false) {
+    //         mainDiv.classList.toggle('divDrop');
+    //     }
+    //     else {
+    //         //todo
+    //     }
+    // })  
+
+    // mainDiv.addEventListener("drop", (event) => {
+    //     event.preventDefault();
+
+    //     mainDiv.classList.toggle('divDrop');
+
+    //     let dropped = event.dataTransfer.getData("text/html");
+        
+    //     let droppedParsed = new DOMParser().parseFromString(dropped, 'text/html');
+    //     let droppedElement = droppedParsed.firstChild.childNodes[1].firstChild
+
+    //     this.createCard(mainDiv, droppedElement.textContent);
+        
+
+    //     console.log('element dropped');
+    // })
+
+
     setPosition(elm, clientX, clientY, attempt) {
-        elm.style.position = 'absolute';
-        elm.style.top = clientY - 300;
-        elm.style.left = clientX - 1000;
+        elm.style.position = 'fixed';
+        elm.style.top = clientY;
+        elm.style.left = clientX;
     }
 
 }

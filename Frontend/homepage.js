@@ -17,33 +17,6 @@ class homepage {
         let mainDiv = this.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
 
-        mainDiv.addEventListener("dragover", (event) => {
-            event.preventDefault();
-
-            if (mainDiv.classList.contains('divDrop') == false) {
-                mainDiv.classList.toggle('divDrop');
-            }
-            else {
-                //todo
-            }
-        })  
-
-        mainDiv.addEventListener("drop", (event) => {
-            event.preventDefault();
-
-            mainDiv.classList.toggle('divDrop');
-
-            let dropped = event.dataTransfer.getData("text/html");
-            
-            let droppedParsed = new DOMParser().parseFromString(dropped, 'text/html');
-            let droppedElement = droppedParsed.firstChild.childNodes[1].firstChild
-
-            this.createCard(mainDiv, droppedElement.textContent);
-            
-
-            console.log('element dropped');
-        })
-
         let homepageTitle = this.createElem(mainDiv, 'hpTitle', 'empty', 'h2');
         homepageTitle.textContent = usernameStored + `'s Homepage`;
 
@@ -145,43 +118,21 @@ class homepage {
         elm.style.left = clientX - 1000;
     }
 
-    createCard(mainElm, cardTitle) {
+    createCard = async (mainElm, cardTitle) => {
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
         card.setAttribute('draggable', 'true');
         card.textContent = cardTitle;
         mainElm.appendChild(card);
 
-        card.addEventListener("dragstart", (event) => {
-            event.dataTransfer.setData("text/plain", cardTitle);
-            event.dataTransfer.setData("text/html", card.outerHTML);
+        let DDImp = await import('./DragnDrop.js');
+        let DD = new DDImp.Draggin;
 
-            let fakeDrag = document.createElement("span");
-            fakeDrag.setAttribute('style', 'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
+        DD.DragwithFullElm(card);
 
-            event.dataTransfer.setDragImage(fakeDrag, 0, 0);
-            console.log('starting drag');
-
-            let attempt = 0;
-
-            card.addEventListener("drag", (dragEvent) => {
-
-                if (attempt === 10) {
-                    const clientX = dragEvent.clientX;
-                    const clientY = dragEvent.clientY;
-
-                    this.setPosition(card, clientX, clientY, attempt);
-                    attempt = 0;
-                } 
-                else {
-                    attempt = attempt + 1;
-                }
-            })     
-        })
-
-        card.addEventListener("dragend", (event) => {
-            console.log('drag ended');
-            card.remove();
-        })
+        // card.addEventListener("dragend", (event) => {
+        //     console.log('drag ended');
+        //     card.remove();
+        // })
     }
 }
