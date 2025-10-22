@@ -166,7 +166,7 @@ class elmCreator {
     async createItemCard(mainElm, itemTitle) {
         let counter = 0;
 
-        while (counter < 5) {
+        while (counter < 50) {
             let doubleCard = document.createElement('div');
             doubleCard.setAttribute('class', 'doubleCard');
             mainElm.appendChild(doubleCard);

@@ -1,0 +1,11 @@
+.popupDiv {
+    position: fixed;
+    top: 25vh;
+    left: 85vh;
+    height: 50vh;
+    width: 30vh;
+    background-color: black;
+    color: white;
+    border: 5px solid grey;
+    z-index: 100;
+}
