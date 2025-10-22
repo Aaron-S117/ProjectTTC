@@ -79,13 +79,12 @@
 
 
 .sidebar {
-    width: 5%;
+    width: 3%;
     height: 100%;
     position: fixed;
     top: 8;
     left: 0;
     transition: all .15s ease-in;
-    
 }
 .sidebar.active {
     width: 10%;
@@ -95,6 +94,11 @@
     transition-timing-function: ease-in-out;
 }
 
+.sidebarButton {
+    margin-left: 50px;
+    margin-top: 10px;
+    transform: scale(1.1);
+}
 #sidebarButton {
     transition: all .15s ease-in;
     margin-top: 5px;
@@ -108,16 +112,15 @@
 #sidebarButton:hover {
     background:rgb(117, 160, 173);
     border: 2px solid yellow;
-    transform: translate(0, 2px);
     box-shadow: 0 0;
 }
 
 #sidebarButton.active {
-     transform: translateX(14vh);
-     transition-delay: .2s;
-     transition-property: all;
-     transition-duration: .2s;
-     transition-timing-function: ease-in-out;
+    transform: translateX(15vh);
+    transition-delay: .2s;
+    transition-property: all;
+    transition-duration: .2s;
+    transition-timing-function: ease-in-out;
 }
 
 .sidebarButtonDiv {
@@ -140,16 +143,10 @@
     transform: translateX(0);
     padding-top: 5px;
     padding-bottom: 7px;
-    background-color: blue;    
+    background-color: white;    
     border-right: 2px solid grey;
     transition: all .4s ease-in-out;
 
-}
-
-.sidebarButton {
-    margin-left: 50px;
-    margin-top: 10px;
-    transform: scale(1.1);
 }
 
 .doubleCard {

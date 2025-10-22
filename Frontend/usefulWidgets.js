@@ -50,18 +50,14 @@ class sidebarBuilder {
             border: '2px solid grey',
             margin: '6px',
             borderRadius: '20px',
-            boxShadow: '0px 3px lightgrey',
+            //boxShadow: '0px 3px lightgrey',
         });
 
         // Main sidebar button
         const sidebarButton = document.createElement('button');
         sidebarButton.id = 'sidebarButton';
+        sidebarButton.textContent = '='
         sidebarButton.draggable = true;
-
-        const buttonImage = document.createElement('img');
-        buttonImage.src = '../resources/hamburger';
-        buttonImage.style.maxWidth = '15px';
-        sidebarButton.appendChild(buttonImage);
 
         buttonWrapper.appendChild(sidebarButton);
         sidebarButtonDiv.appendChild(buttonWrapper);
