@@ -123,13 +123,43 @@ class itemPage {
 
         let pageTitle = elmC.createElem(mainDiv, 'itemsTitle', 'empty', 'h2');
         pageTitle.textContent = 'Collection Items';
-        mainDiv.appendChild(pageTitle);
+
+        let createItemButton = elmC.createElem(mainDiv, 'createItemButton', 'empty', 'button');
+        createItemButton.textContent = 'Create Item';
+
+        createItemButton.addEventListener('click', this.createItemForm);
 
         await elmC.createItemCard(mainDiv, 'Test Item'); 
 
     }
     retrieveCollectionItem(){
         // todo 
+    }
+    async createItemForm() {
+        let elmC = new elmCreator;
+
+        let UW = await import('./usefulWidgets.js');
+        let UWP = new UW.PopupModal;
+
+        let popDiv = UWP.createPopup();
+
+        let popupTitle = document.getElementById('pTitle');
+        popupTitle.textContent = 'Creating Item...';
+
+        // Item Name Section
+        let itemNameDiv = elmC.createElem(popDiv, 'newItemNameDiv', 'empty', 'div');
+        let itemNameText = elmC.createElem(itemNameDiv, 'newItemText', 'empty', 'p');
+        itemNameText.textContent = 'Item Name';
+        itemNameText.setAttribute('class', 'formText1');
+        let itemNameBox = elmC.createElem(itemNameDiv, 'newItemNameBox', 'text', 'input');
+
+        // Item Description Section
+        let itemDescDiv = elmC.createElem(popDiv, 'newItemDescDiv', 'empty', 'div');
+        let itemDescText = elmC.createElem(itemDescDiv, 'newItemDescText', 'empty', 'p');
+        itemDescText.textContent = 'Item Description';
+        itemDescText.setAttribute('class', 'formText1');
+        let itemDescBox = elmC.createElem(itemDescDiv, 'newItemDescBox', '', 'textarea');
+
     }
 }
 

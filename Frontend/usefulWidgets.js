@@ -88,6 +88,8 @@ export class PopupModal {
 
         if(popupOpen === true) {
             console.log('Popup already open!');
+
+            return;
         }
         else {
 
@@ -116,11 +118,12 @@ export class PopupModal {
     
             exitButton.addEventListener('click', () => {
                 this.exitPopup(popupDiv);
-    
                 popupOpen = false;
             })
 
             this.includeCSSFile();
+
+            return popupDiv;
         }
     }
     includeCSSFile() {

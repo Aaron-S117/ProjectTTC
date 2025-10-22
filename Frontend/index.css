@@ -174,3 +174,33 @@
     transition: all 1s;
 }
 
+#newItemNameDiv {
+    display: flex;
+}
+
+#newItemText {
+    margin-right: 10px;
+    margin-left: -50px;
+}
+
+#newItemNameBox {
+    height: 30px;
+    margin-top: 10px;
+    width: 85%;
+}
+
+#newItemDescDiv {
+    display: flex;
+}
+
+#newItemDescBox {
+    margin-top: 10px;
+    min-width: 32vh;
+    min-height: 100px;
+}
+
+#newItemDescText {
+    margin-right: 10px;
+    margin-left: 8px;
+}
+
