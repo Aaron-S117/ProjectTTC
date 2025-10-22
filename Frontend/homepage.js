@@ -220,11 +220,17 @@ class elmCreator {
             doubleCard.appendChild(secondCard);
 
             let UW = await import('./usefulWidgets.js');
+            let DDImp = await import('./DragnDrop.js');
 
             let itemPopup = new UW.PopupModal;
+            let DD = new DDImp.Draggin;
 
             firstCard.addEventListener('click', (event) => {
-                itemPopup.createPopup();
+                let popup = itemPopup.createPopup();
+
+                let popupHeader = document.getElementById('pHeaderDiv');
+
+                DD.DragwithFullElm(popup, popupHeader);
             });
 
             counter++;

@@ -1,7 +1,7 @@
 export class Draggin {
     
-    DragwithFullElm(ele) {
-        ele.addEventListener('dragstart', (event) => {
+    DragwithFullElm(ele, dragEle) {
+        dragEle.addEventListener('dragstart', (event) => {
             event.dataTransfer.setData("text/plain", ele.textcontent);
             event.dataTransfer.setData("text/html", ele.outerHTML);
 
@@ -12,7 +12,9 @@ export class Draggin {
 
             let attempt = 0;
 
-            ele.addEventListener("drag", (dragEvent) => {
+            dragEle.addEventListener("drag", (dragEvent) => {
+
+                console.log('trp')
 
                 if (attempt === 10) {
                     const clientX = dragEvent.clientX;

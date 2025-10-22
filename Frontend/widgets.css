@@ -12,6 +12,10 @@
     overflow-y: scroll;
 }
 
+.popupDiv:hover{
+    border: 1px solid lightgreen;
+}
+
 #pHeaderDiv {
     min-height: 25px;
     border-bottom: 1px solid black;
