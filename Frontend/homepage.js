@@ -65,9 +65,8 @@ class homepage {
             let data = await response.json();
 
             for (const collection of data) {
-                let colCard = elmC.createCard(homepageDiv, collection.collectionTitle);
+                let colCard = elmC.createCard(homepageDiv, collection.collectionTitle, collection.ID);
             }
-            
         }
         else {
             // todo 
@@ -110,9 +109,12 @@ class homepage {
 }
 
 class itemPage {
-    async createItempage(event) {
+    async createItempage(mainElm) {
 
         let elmC = new elmCreator;
+        let collectionID = mainElm.id;
+
+        console.log(collectionID);
 
         let body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
@@ -131,11 +133,50 @@ class itemPage {
 
         createItemButton.addEventListener('click', this.createItemForm);
 
-        await elmC.createItemCard(mainDiv, 'Test Item'); 
+        let CI = await this.retrieveCollectionItems(collectionID);
+        let CIJson = await CI.json()
 
+        let cardNumber = 1;
+
+        for (const item of CIJson) {
+
+            var currentMainDiv; 
+
+            if (cardNumber === 1){
+                let doubleCard = document.createElement('div');
+                doubleCard.setAttribute('class', 'doubleCard');
+
+                await elmC.createItemCard(doubleCard, item.ItemName, 1); 
+                cardNumber = 2;
+
+                mainDiv.appendChild(doubleCard);
+                currentMainDiv = doubleCard;
+            }
+            else if (cardNumber === 2) {
+                await elmC.createItemCard(currentMainDiv, item.ItemName, 2); 
+                cardNumber = 1;
+            }
+            else {
+                console.log('issue with creating card');
+            }
+            
+        }
     }
-    retrieveCollectionItemsz(){
-        // todo 
+    async retrieveCollectionItems(collectionID){
+        const response = await fetch(baseURL + `getCollectionItems?collectionID=${collectionID}` , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+
+        if (!response) {
+            console.log('Unable to retrieve Collection Items');
+        }
+        else {
+            console.log(response);
+            return response;
+        }
     }
     async createItemForm() {
         let elmC = new elmCreator;
@@ -182,44 +223,37 @@ class elmCreator {
         return elem;
     }
 
-    createCard = async (mainElm, cardTitle) => {
+    createCard = async (mainElm, cardTitle, collectionID) => {
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
         card.setAttribute('draggable', 'true');
         card.textContent = cardTitle;
+        card.setAttribute('id', collectionID);
         mainElm.appendChild(card);
 
         let itemPageCreator = new itemPage;
 
-        card.addEventListener('click', (event) => {
-            itemPageCreator.createItempage(event);
+        card.addEventListener('click', () => {
+            itemPageCreator.createItempage(card);
         });
     }
 
-    async createItemCard(mainElm, itemTitle) {
-        let counter = 0;
+    async createItemCard(mainElm, itemTitle, cardNumber) {
 
-        while (counter < 50) {
-            let doubleCard = document.createElement('div');
-            doubleCard.setAttribute('class', 'doubleCard');
-            mainElm.appendChild(doubleCard);
-            
+        console.log(cardNumber);
+        let UW = await import('./usefulWidgets.js');
+        let DDImp = await import('./DragnDrop.js');
+
+        let itemPopup = new UW.PopupModal;
+        let DD = new DDImp.Draggin;
+
+        if (cardNumber === 1) {
+
             let firstCard = document.createElement('div');
-            firstCard.textContent = 'Test Item 1: ' + counter;
+            firstCard.textContent = itemTitle;
             firstCard.setAttribute('class', 'card1');
-    
-            let secondCard = document.createElement('div');
-            secondCard.textContent = 'Test Item 2: ' + counter;
-            secondCard.setAttribute('class', 'card2');
 
-            doubleCard.appendChild(firstCard);
-            doubleCard.appendChild(secondCard);
-
-            let UW = await import('./usefulWidgets.js');
-            let DDImp = await import('./DragnDrop.js');
-
-            let itemPopup = new UW.PopupModal;
-            let DD = new DDImp.Draggin;
+            mainElm.appendChild(firstCard); 
 
             firstCard.addEventListener('click', (event) => {
                 let popup = itemPopup.createPopup();
@@ -228,19 +262,24 @@ class elmCreator {
 
                 DD.DragwithFullElm(popup, popupHeader);
             });
-
-            counter++;
         }
+        else if (cardNumber === 2) {
+            let secondCard = document.createElement('div');
+            secondCard.textContent = itemTitle;
+            secondCard.setAttribute('class', 'card2');
 
-        // let firstCard = document.createElement('div');
-        // firstCard.textContent = 'Test Item 1';
-        // firstCard.setAttribute('class', 'card1');
+            mainElm.appendChild(secondCard);
 
-        // let secondCard = document.createElement('div');
-        // secondCard.textContent = 'Test Item 2';
-        // secondCard.setAttribute('class', 'card2');
+            secondCard.addEventListener('click', (event) => {
+                let popup = itemPopup.createPopup();
 
-        // doubleCard.appendChild(firstCard);
-        // doubleCard.appendChild(secondCard);
+                let popupHeader = document.getElementById('pHeaderDiv');
+
+                DD.DragwithFullElm(popup, popupHeader);
+            });
+        }
+        else {
+            // todo
+        }
     }
 }

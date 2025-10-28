@@ -281,7 +281,7 @@ const server = http.createServer(async (req, res) => {
 
         let userID = urlParams.get('userID');
 
-        let sqlQuery = `SELECT "collectionTitle" FROM collection
+        let sqlQuery = `SELECT "ID", "collectionTitle" FROM collection
         WHERE "userID" = ${userID}`
         try {
             let getCollection = await client.query(sqlQuery);
