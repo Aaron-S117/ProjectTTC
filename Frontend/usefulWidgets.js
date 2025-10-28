@@ -108,11 +108,15 @@ export class PopupModal {
             let exitButton = document.createElement('button');
             exitButton.setAttribute('ID', 'pExitButton');
             exitButton.textContent = 'X';
+
+            let contentDiv = document.createElement('div');
+            contentDiv.setAttribute('ID', 'pContentDiv');
     
             body.appendChild(popupDiv);
             popupDiv.appendChild(headerDiv);
             headerDiv.appendChild(title);
             headerDiv.appendChild(exitButton);
+            popupDiv.appendChild(contentDiv);
     
             popupOpen = true;
     

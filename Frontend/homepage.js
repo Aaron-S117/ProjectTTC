@@ -185,24 +185,27 @@ class itemPage {
         let UWP = new UW.PopupModal;
 
         let popDiv = UWP.createPopup();
+        let contentDiv = document.getElementById('pContentDiv');
 
         let popupTitle = document.getElementById('pTitle');
         popupTitle.textContent = 'Creating Item...';
 
         // Item Name Section
-        let itemNameDiv = elmC.createElem(popDiv, 'newItemNameDiv', 'empty', 'div');
+        let itemNameDiv = elmC.createElem(contentDiv, 'newItemNameDiv', 'empty', 'div');
         let itemNameText = elmC.createElem(itemNameDiv, 'newItemText', 'empty', 'p');
         itemNameText.textContent = 'Item Name';
         itemNameText.setAttribute('class', 'formText1');
         let itemNameBox = elmC.createElem(itemNameDiv, 'newItemNameBox', 'text', 'input');
 
         // Item Description Section
-        let itemDescDiv = elmC.createElem(popDiv, 'newItemDescDiv', 'empty', 'div');
+        let itemDescDiv = elmC.createElem(contentDiv, 'newItemDescDiv', 'empty', 'div');
         let itemDescText = elmC.createElem(itemDescDiv, 'newItemDescText', 'empty', 'p');
         itemDescText.textContent = 'Item Description';
         itemDescText.setAttribute('class', 'formText1');
         let itemDescBox = elmC.createElem(itemDescDiv, 'newItemDescBox', '', 'textarea');
 
+        let footerDiv = elmC.createElem(popDiv, 'newItemfooterDiv', 'empty', 'div');
+        footerDiv.textContent = 'Test Footer';
     }
 }
 

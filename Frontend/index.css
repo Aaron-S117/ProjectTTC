@@ -220,4 +220,13 @@
     margin-left: 8px;
 }
 
+#newItemfooterDiv {
+    position: absolute;
+    width: 100%;
+    border-top: 1px solid black;
+    bottom: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 
