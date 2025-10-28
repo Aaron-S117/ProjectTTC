@@ -195,14 +195,14 @@
 }
 
 #newItemText {
-    margin-right: 10px;
-    margin-left: -50px;
+    margin-left: 10px;
 }
 
 #newItemNameBox {
     height: 30px;
     margin-top: 10px;
-    width: 85%;
+    margin-left: 45px;
+    width: 64%;
 }
 
 #newItemDescDiv {
