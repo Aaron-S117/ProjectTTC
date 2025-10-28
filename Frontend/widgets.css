@@ -17,6 +17,7 @@
     border-bottom: 1px solid black;
 }
 
+/* 
 @keyframes headerDivAnimation {
     0% {rotate: 1deg;}
     25% {rotate: -1deg;}
@@ -24,14 +25,13 @@
     75% {rotate: -1deg;}
     100% {rotate: 0deg;}
 
-}
+} */
 
 #pHeaderDiv:hover {
-    animation: headerDivAnimation;
-    animation-duration: 1s;
 
+    /* animation: headerDivAnimation;
+    animation-duration: 1s; */
     cursor: pointer;
-
     background-color: grey;
     border-bottom: 2px solid black;
 

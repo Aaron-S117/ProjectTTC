@@ -116,23 +116,25 @@ class itemPage {
 
         let body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
-
+        
         // create the main div where all the collection cards will be stored
         let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
         mainDiv.classList.add('mainDiv');
 
-        let pageTitle = elmC.createElem(mainDiv, 'itemsTitle', 'empty', 'h2');
+        let HeaderDiv = elmC.createElem(mainDiv, 'headerDiv', 'empty', 'div');
+
+        let pageTitle = elmC.createElem(HeaderDiv, 'itemsTitle', 'empty', 'h2');
         pageTitle.textContent = 'Collection Items';
 
-        let createItemButton = elmC.createElem(mainDiv, 'createItemButton', 'empty', 'button');
-        createItemButton.textContent = 'Create Item';
+        let createItemButton = elmC.createElem(HeaderDiv, 'createItemButton', 'empty', 'button');
+        createItemButton.textContent = '+ Create Item';
 
         createItemButton.addEventListener('click', this.createItemForm);
 
         await elmC.createItemCard(mainDiv, 'Test Item'); 
 
     }
-    retrieveCollectionItem(){
+    retrieveCollectionItemsz(){
         // todo 
     }
     async createItemForm() {
@@ -178,12 +180,6 @@ class elmCreator {
         mainElm.appendChild(elem);
     
         return elem;
-    }
-
-    setPosition(elm, clientX, clientY, attempt) {
-        elm.style.position = 'absolute';
-        elm.style.top = clientY - 300;
-        elm.style.left = clientX - 1000;
     }
 
     createCard = async (mainElm, cardTitle) => {
