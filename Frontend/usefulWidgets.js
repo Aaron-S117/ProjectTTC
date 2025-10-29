@@ -102,7 +102,6 @@ export class PopupModal {
             headerDiv.setAttribute('ID', 'pHeaderDiv');
     
             let title = document.createElement('h5');
-            title.textContent = 'Item Title';
             title.setAttribute('ID', 'pTitle');
     
             let exitButton = document.createElement('button');

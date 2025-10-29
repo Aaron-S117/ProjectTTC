@@ -229,4 +229,9 @@
     font-weight: bold;
 }
 
+input[type = text], textarea {
+    border-radius: 5px;
+    border: 2px solid black;
+}
+
 

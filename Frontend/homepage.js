@@ -259,9 +259,11 @@ class elmCreator {
             mainElm.appendChild(firstCard); 
 
             firstCard.addEventListener('click', (event) => {
-                let popup = itemPopup.createPopup();
+                let popup = itemPopup.createPopup(itemTitle);
 
                 let popupHeader = document.getElementById('pHeaderDiv');
+                let pTitle = document.getElementById('pTitle');
+                pTitle.textContent = itemTitle
 
                 DD.DragwithFullElm(popup, popupHeader);
             });
@@ -274,9 +276,11 @@ class elmCreator {
             mainElm.appendChild(secondCard);
 
             secondCard.addEventListener('click', (event) => {
-                let popup = itemPopup.createPopup();
+                let popup = itemPopup.createPopup(itemTitle);
 
                 let popupHeader = document.getElementById('pHeaderDiv');
+                let pTitle = document.getElementById('pTitle');
+                pTitle.textContent = itemTitle
 
                 DD.DragwithFullElm(popup, popupHeader);
             });
