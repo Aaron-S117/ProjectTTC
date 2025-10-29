@@ -75,19 +75,20 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS collection
     OWNER to postgres;
-    
+
 CREATE TABLE IF NOT EXISTS item
 (
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     "collectionID" integer NOT NULL,
     "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+	"ItemValue" TEXT,
     "CreatedDate" timestamp with time zone DEFAULT now(),
     "ChangeDate" time with time zone,
     CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
     CONSTRAINT "Unique Item ID" UNIQUE ("ID")
         INCLUDE("ID"),
     CONSTRAINT item_collection FOREIGN KEY ("collectionID")
-        REFERENCES collection ("ID") MATCH SIMPLE
+        REFERENCES public.collection ("ID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE
 )

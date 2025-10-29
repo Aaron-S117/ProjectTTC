@@ -1,8 +1,9 @@
 import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
 import { json } from "stream/consumers";
-import { time } from "console";
+import { error, time } from "console";
 import { Client } from 'pg';
+import { read } from "fs";
 
 // .env file reading setup
 dotenv.config();
@@ -20,7 +21,7 @@ await client.connect();
 
 // Create schema if needed
 try {
-    const res = await client.query(`CREATE TABLE IF NOT EXISTS Users
+    const res = await client.query(`CREATE TABLE IF NOT EXISTS users
     (
         "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
         "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
@@ -29,12 +30,13 @@ try {
         "ChangeDate" time with time zone,
         CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
         CONSTRAINT "Unique ID" UNIQUE ("ID")
-            INCLUDE("ID")
+            INCLUDE("ID"),
+        CONSTRAINT usernameunique UNIQUE ("Username")
     )
     
     TABLESPACE pg_default;
     
-    ALTER TABLE IF EXISTS Users
+    ALTER TABLE IF EXISTS users
         OWNER to postgres;
     
     CREATE TABLE IF NOT EXISTS collection
@@ -47,36 +49,37 @@ try {
         "ChangeDate" time with time zone,
         CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
         CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
-                    INCLUDE("ID"),
+            INCLUDE("ID"),
         CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
             REFERENCES users ("ID") MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE
-        )
-        
+    )
+    
     TABLESPACE pg_default;
-        
+    
     ALTER TABLE IF EXISTS collection
         OWNER to postgres;
-        
+    
     CREATE TABLE IF NOT EXISTS item
     (
         "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
         "collectionID" integer NOT NULL,
         "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+        "ItemValue" TEXT,
         "CreatedDate" timestamp with time zone DEFAULT now(),
         "ChangeDate" time with time zone,
         CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
         CONSTRAINT "Unique Item ID" UNIQUE ("ID")
             INCLUDE("ID"),
         CONSTRAINT item_collection FOREIGN KEY ("collectionID")
-            REFERENCES collection ("ID") MATCH SIMPLE
+            REFERENCES public.collection ("ID") MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE
     )
-
+    
     TABLESPACE pg_default;
-
+    
     ALTER TABLE IF EXISTS item
         OWNER to postgres;`)
     
@@ -263,8 +266,6 @@ const server = http.createServer(async (req, res) => {
 
                 let createCollection = await client.query(sqlQuery);
 
-                console.log(createCollection.rowCount);
-
                 res.statusCode = 201;
                 res.end('Collection Created');
            } catch (err) {
@@ -285,8 +286,6 @@ const server = http.createServer(async (req, res) => {
         WHERE "userID" = ${userID}`
         try {
             let getCollection = await client.query(sqlQuery);
-
-            console.log(getCollection.rows);
 
             res.statusCode = 200;
     
@@ -316,6 +315,35 @@ const server = http.createServer(async (req, res) => {
             console.log(err);
             res.end('Issue getting collection items');
         }
+    }
+    else if (parsedUrl.pathname === '/createItem' && method === 'POST') {
+        res.statusCode = 200;
+
+        let body = '';
+
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        req.on('end', async () => {
+            res.statusCode = 200;
+
+            let parsedBody = JSON.parse(body);
+
+            let query = `INSERT INTO item 
+            ("collectionID", "ItemName", "itemvalue")
+            VALUES ('${parsedBody.collectionID}', '${parsedBody.itemName}', '${parsedBody.itemValue}')`
+
+            try {
+                let insertQuery = await client.query(query);
+
+                res.statusCode = 201;
+                res.end(JSON.stringify(insertQuery))
+            }catch (err) {
+                res.statusCode = 500;
+                res.end('Issue with creating item. ' + err);
+            }
+        })
     }
     else {
         // Handle all other unmatched routes

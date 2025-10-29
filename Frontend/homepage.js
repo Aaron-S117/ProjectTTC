@@ -114,8 +114,6 @@ class itemPage {
         let elmC = new elmCreator;
         let collectionID = mainElm.id;
 
-        console.log(collectionID);
-
         let body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
         
@@ -163,7 +161,7 @@ class itemPage {
         }
     }
     async retrieveCollectionItems(collectionID){
-        const response = await fetch(baseURL + `getCollectionItems?collectionID=${collectionID}` , {
+        const response = await fetch(baseURL + `getCollectionItems?collectionID=${collectionID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -174,7 +172,6 @@ class itemPage {
             console.log('Unable to retrieve Collection Items');
         }
         else {
-            console.log(response);
             return response;
         }
     }
@@ -208,31 +205,80 @@ class itemPage {
         let footerSaveBut = elmC.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
         footerSaveBut.textContent = 'Save';
 
-        footerSaveBut.addEventListener('click', () => {
+        // for creating item in database and creating a new card on the UI
+        footerSaveBut.addEventListener('click', async () => {
 
+            let itemTitleBox = document.getElementById('newItemNameBox');
+            let itemTitle = itemTitleBox.value;
+
+            let itemDescBox = document.getElementById('newItemDescBox');
+            let itemDesc = itemDescBox.value;
+
+            let collectionID = localStorage.getItem("currentCollectionID");
+
+            let itemPM = new itemPage;
+
+
+            let creatingItem = await itemPM.createItem(itemTitle, itemDesc, collectionID);
+
+            let doubleCardDivs = document.getElementsByClassName('doubleCard');
+            let lastDiv = doubleCardDivs[doubleCardDivs.length - 1];
+
+            if (!lastDiv) {
+                console.log('No Div to speak of');
+
+                let doubleCard = document.createElement('div');
+                doubleCard.setAttribute('class', 'doubleCard');
+
+                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1); 
+
+                let mainDiv = document.getElementById('homepageDiv');
+                mainDiv.appendChild(doubleCard);
+            }
+            else if (lastDiv.children.length === 2) {
+
+                let doubleCard = document.createElement('div');
+                doubleCard.setAttribute('class', 'doubleCard');
+
+                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1); 
+
+                let mainDiv = document.getElementById('homepageDiv');
+                mainDiv.appendChild(doubleCard);
+            }
+            else if (lastDiv.children.length === 1) {
+                let newCard = await elmC.createItemCard(lastDiv, itemTitle, 2); 
+            }
+            else {
+                console.log('No Div to speak of');
+            }
+
+            popDiv.remove();
+            UWP.popupOpen = false;
         })
     }
 
-    async createItem(itemTitle, itemDescription) {
+    // API call for creating item in database
+    async createItem(itemTitle, itemValue, collectionID) {
 
         let postData = {
             itemName: itemTitle,
-            itemDesc: itemDescription
+            itemValue: itemValue,
+            collectionID: collectionID
         }
 
-        const response = fetch(baseURL + 'createItem', {
-            method: 'GET',
+        const response = await fetch(baseURL + 'createItem', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: stringify(postdata)
+            body: JSON.stringify(postData)
         })
 
         if(!response.ok) {
             console.error('Issue with creating item: ' + response);
         }
         else {
-            // todo 
+            return 'Item Created'; 
         }
     }
 }
@@ -265,13 +311,13 @@ class elmCreator {
         let itemPageCreator = new itemPage;
 
         card.addEventListener('click', () => {
+            localStorage.setItem('currentCollectionID', collectionID);
             itemPageCreator.createItempage(card);
         });
     }
 
     async createItemCard(mainElm, itemTitle, cardNumber) {
-
-        console.log(cardNumber);
+        
         let UW = await import('./usefulWidgets.js');
         let DDImp = await import('./DragnDrop.js');
 
