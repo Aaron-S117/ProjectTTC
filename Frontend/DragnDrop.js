@@ -62,8 +62,8 @@ export class Draggin {
 
     setPosition(elm, clientX, clientY, attempt) {
         elm.style.position = 'fixed';
-        elm.style.top = clientY;
-        elm.style.left = clientX;
+        elm.style.top = clientY - 10;
+        elm.style.left = clientX - 100;
     }
 
 }

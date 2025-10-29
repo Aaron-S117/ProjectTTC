@@ -16,10 +16,11 @@
 #pHeaderDiv {
     min-height: 25px;
     border-bottom: 1px solid black;
+    z-index: 9999;
 }
 
-/* 
-@keyframes headerDivAnimation {
+
+/* @keyframes headerDivAnimation {
     0% {rotate: 1deg;}
     25% {rotate: -1deg;}
     50% {rotate: 1deg;}
