@@ -205,7 +205,8 @@ class itemPage {
         let itemDescBox = elmC.createElem(itemDescDiv, 'newItemDescBox', '', 'textarea');
 
         let footerDiv = elmC.createElem(popDiv, 'newItemfooterDiv', 'empty', 'div');
-        footerDiv.textContent = 'Test Footer';
+        let footerSaveBut = elmC.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
+        footerSaveBut.textContent = 'Save';
     }
 }
 
