@@ -170,7 +170,7 @@ class itemPage {
             },
         })
 
-        if (!response) {
+        if (!response.ok) {
             console.log('Unable to retrieve Collection Items');
         }
         else {
@@ -207,6 +207,33 @@ class itemPage {
         let footerDiv = elmC.createElem(popDiv, 'newItemfooterDiv', 'empty', 'div');
         let footerSaveBut = elmC.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
         footerSaveBut.textContent = 'Save';
+
+        footerSaveBut.addEventListener('click', () => {
+
+        })
+    }
+
+    async createItem(itemTitle, itemDescription) {
+
+        let postData = {
+            itemName: itemTitle,
+            itemDesc: itemDescription
+        }
+
+        const response = fetch(baseURL + 'createItem', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: stringify(postdata)
+        })
+
+        if(!response.ok) {
+            console.error('Issue with creating item: ' + response);
+        }
+        else {
+            // todo 
+        }
     }
 }
 
