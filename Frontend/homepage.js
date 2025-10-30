@@ -144,14 +144,14 @@ class itemPage {
                 let doubleCard = document.createElement('div');
                 doubleCard.setAttribute('class', 'doubleCard');
 
-                await elmC.createItemCard(doubleCard, item.ItemName, 1); 
+                await elmC.createItemCard(doubleCard, item.ItemName, 1, item.ID); 
                 cardNumber = 2;
 
                 mainDiv.appendChild(doubleCard);
                 currentMainDiv = doubleCard;
             }
             else if (cardNumber === 2) {
-                await elmC.createItemCard(currentMainDiv, item.ItemName, 2); 
+                await elmC.createItemCard(currentMainDiv, item.ItemName, 2, item.ID); 
                 cardNumber = 1;
             }
             else {
@@ -281,6 +281,34 @@ class itemPage {
             return 'Item Created'; 
         }
     }
+
+    showItemDetails(itemPopup, itemTitle, DD) {
+
+        let elmc = new elmCreator;
+
+        let popup = itemPopup.createPopup(itemTitle);
+
+        let popupHeader = document.getElementById('pHeaderDiv');
+        let pTitle = document.getElementById('pTitle');
+        pTitle.textContent = itemTitle
+
+        let contentDiv = document.getElementById('pContentDiv');
+
+        let itemDesc = elmc.createElem(contentDiv, 'itemDesc', 'empty', 'h4');
+        
+
+        let footerDiv = elmc.createElem(popup, 'newItemfooterDiv', 'empty', 'div');
+        let footerSaveBut = elmc.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
+        footerSaveBut.classList.add('hide');
+        footerSaveBut.textContent = 'Save';
+
+        // Allow popup to be dragged around
+        DD.DragwithFullElm(popup, popupHeader);
+    }
+
+    async getItemDetails() {
+
+    }
 }
 
 class elmCreator {
@@ -316,36 +344,33 @@ class elmCreator {
         });
     }
 
-    async createItemCard(mainElm, itemTitle, cardNumber) {
+    async createItemCard(mainElm, itemTitle, cardNumber, ID) {
         
         let UW = await import('./usefulWidgets.js');
         let DDImp = await import('./DragnDrop.js');
 
         let itemPopup = new UW.PopupModal;
         let DD = new DDImp.Draggin;
+        let IP = new itemPage;
 
         if (cardNumber === 1) {
 
             let firstCard = document.createElement('div');
             firstCard.textContent = itemTitle;
             firstCard.setAttribute('class', 'card1');
+            firstCard.setAttribute('ID', ID);
 
             mainElm.appendChild(firstCard); 
 
-            firstCard.addEventListener('click', (event) => {
-                let popup = itemPopup.createPopup(itemTitle);
-
-                let popupHeader = document.getElementById('pHeaderDiv');
-                let pTitle = document.getElementById('pTitle');
-                pTitle.textContent = itemTitle
-
-                DD.DragwithFullElm(popup, popupHeader);
+            firstCard.addEventListener('click', () => {
+                IP.showItemDetails(itemPopup, itemTitle, DD);
             });
         }
         else if (cardNumber === 2) {
             let secondCard = document.createElement('div');
             secondCard.textContent = itemTitle;
             secondCard.setAttribute('class', 'card2');
+            secondCard.setAttribute('ID', ID);
 
             mainElm.appendChild(secondCard);
 
@@ -356,6 +381,7 @@ class elmCreator {
                 let pTitle = document.getElementById('pTitle');
                 pTitle.textContent = itemTitle
 
+                // Allow popup to be dragged around
                 DD.DragwithFullElm(popup, popupHeader);
             });
         }

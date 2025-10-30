@@ -245,4 +245,8 @@ input[type = text], textarea {
     border: 2px solid black;
 }
 
+.hide {
+    visibility: hidden;
+}
+
 
