@@ -313,7 +313,7 @@ const server = http.createServer(async (req, res) => {
         }catch (err) {
             res.statusCode = 500;
             console.log(err);
-            res.end('Issue getting collection items');
+            res.end('Issue getting collection items.' + err);
         }
     }
     else if (parsedUrl.pathname === '/createItem' && method === 'POST') {
@@ -344,6 +344,26 @@ const server = http.createServer(async (req, res) => {
                 res.end('Issue with creating item. ' + err);
             }
         })
+    }
+    // Selecting a single item from the database
+    else if (parsedUrl.pathname === '/getItem' && urlParams.get('itemID') != '' && method === 'GET') {
+
+        res.statusCode = 200;
+        let itemID = urlParams.get('itemID');
+
+        let sqlQuery = `SELECT * FROM item
+        where "ID" = '${itemID}'`;
+
+        try {
+            let getItem = await client.query(sqlQuery);
+            res.statusCode = 200;
+            res.end(JSON.stringify(getItem.rows));
+            
+        }catch (err) {
+            res.statusCode = 500;
+            console.log(err);
+            res.end('Issue getting item data.' + err);
+        }
     }
     else {
         // Handle all other unmatched routes

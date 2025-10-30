@@ -282,7 +282,7 @@ class itemPage {
         }
     }
 
-    showItemDetails(itemPopup, itemTitle, DD) {
+    async showItemDetails(itemPopup, itemTitle, DD, ID) {
 
         let elmc = new elmCreator;
 
@@ -290,12 +290,22 @@ class itemPage {
 
         let popupHeader = document.getElementById('pHeaderDiv');
         let pTitle = document.getElementById('pTitle');
-        pTitle.textContent = itemTitle
+        pTitle.textContent = itemTitle || undefined;
 
         let contentDiv = document.getElementById('pContentDiv');
 
+        let getItem = await this.getItemDetails(ID);
         let itemDesc = elmc.createElem(contentDiv, 'itemDesc', 'empty', 'h4');
-        
+
+        console.log(JSON.stringify(getItem));
+
+        if (getItem.itemvalue === undefined) {
+            itemDesc.textContent = 'Content Not Found';
+        }
+        else {
+
+            itemDesc.textContent = getItem.itemvalue;
+        }
 
         let footerDiv = elmc.createElem(popup, 'newItemfooterDiv', 'empty', 'div');
         let footerSaveBut = elmc.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
@@ -306,8 +316,21 @@ class itemPage {
         DD.DragwithFullElm(popup, popupHeader);
     }
 
-    async getItemDetails() {
+    async getItemDetails(ID) {
+        let response = await fetch(baseURL + 'getItem?itemID=' + ID, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!response.ok) {
+            console.error('Issue getting item data');
+        }
+        else {
+            console.log(response);
+            return response;
+        }
     }
 }
 
@@ -362,8 +385,10 @@ class elmCreator {
 
             mainElm.appendChild(firstCard); 
 
+
+
             firstCard.addEventListener('click', () => {
-                IP.showItemDetails(itemPopup, itemTitle, DD);
+                IP.showItemDetails(itemPopup, itemTitle, DD, ID);
             });
         }
         else if (cardNumber === 2) {
