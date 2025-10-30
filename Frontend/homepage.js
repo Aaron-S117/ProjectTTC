@@ -297,13 +297,10 @@ class itemPage {
         let getItem = await this.getItemDetails(ID);
         let itemDesc = elmc.createElem(contentDiv, 'itemDesc', 'empty', 'h4');
 
-        console.log(JSON.stringify(getItem));
-
-        if (getItem.itemvalue === undefined) {
+        if (getItem === undefined) {
             itemDesc.textContent = 'Content Not Found';
         }
         else {
-
             itemDesc.textContent = getItem.itemvalue;
         }
 
@@ -322,14 +319,17 @@ class itemPage {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        })
+
+        console.log(response);
 
         if (!response.ok) {
             console.error('Issue getting item data');
         }
         else {
-            console.log(response);
-            return response;
+            // return array for the first value
+            let responseArray = await response.json()
+            return responseArray[0];
         }
     }
 }
@@ -384,8 +384,6 @@ class elmCreator {
             firstCard.setAttribute('ID', ID);
 
             mainElm.appendChild(firstCard); 
-
-
 
             firstCard.addEventListener('click', () => {
                 IP.showItemDetails(itemPopup, itemTitle, DD, ID);
