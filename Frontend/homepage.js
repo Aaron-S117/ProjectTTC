@@ -310,7 +310,7 @@ class itemPage {
 
         let exitTextArea = elmc.createElem(textAreaDiv, 'exitTA', 'empty', 'button');
         exitTextArea.classList.add('hide');
-        exitTextArea.textContent = 'X';
+        exitTextArea.textContent = '-';
         
         let itemTextArea = elmc.createElem(textAreaDiv, 'itemTextArea', 'empty', 'textarea');
         itemTextArea.classList.add('itemTextArea');
