@@ -305,6 +305,17 @@ class itemPage {
             itemDesc.textContent = getItem.itemvalue;
         }
 
+        let textAreaDiv = elmc.createElem(contentDiv, 'textAreaDiv', 'empty', 'div');
+        textAreaDiv.classList.add('hide');
+
+        let exitTextArea = elmc.createElem(textAreaDiv, 'exitTA', 'empty', 'button');
+        exitTextArea.classList.add('hide');
+        exitTextArea.textContent = 'X';
+        
+        let itemTextArea = elmc.createElem(textAreaDiv, 'itemTextArea', 'empty', 'textarea');
+        itemTextArea.classList.add('itemTextArea');
+        itemTextArea.textContent = getItem.itemvalue || undefined
+    
         let footerDiv = elmc.createElem(popup, 'newItemfooterDiv', 'empty', 'div');
         let footerSaveBut = elmc.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
         footerSaveBut.classList.add('hide');
@@ -332,9 +343,21 @@ class itemPage {
             itemDescDiv.classList.remove('entered');
         });
 
-        // itemDescDiv.addEventListener('click', () => {
+        itemDescDiv.addEventListener('click', () => {
+            itemDescDiv.classList.add('hide');
+            textAreaDiv.classList.remove('hide');
+            exitTextArea.classList.remove('hide');
+            itemTextArea.classList.remove('hide');
+            footerSaveBut.classList.remove('hide');
+        })
 
-        // })
+        exitTextArea.addEventListener('click', () => {
+            itemDescDiv.classList.remove('hide');
+            textAreaDiv.classList.add('hide');
+            exitTextArea.classList.add('hide');
+            itemTextArea.classList.add('hide');
+            footerSaveBut.classList.add('hide');
+        })
     }
 
     async getItemDetails(ID) {

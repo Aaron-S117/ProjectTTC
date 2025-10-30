@@ -247,10 +247,20 @@ input[type = text], textarea {
 
 .hide {
     visibility: hidden;
+    height: 0;
+    width: 0;
+    transition: none !important;
+    border: 0px rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #itemDesc {
     margin-left: 5px;
+}
+
+#pContentDiv{
+    min-height: 30%;
 }
 
 #itemDescDiv {
@@ -263,7 +273,7 @@ input[type = text], textarea {
 
 #itemDescDiv:hover {
     animation: selectDiv;
-    animation-duration: 1s;
+    animation-duration: .95s;
 }
 
 #itemDescDiv.entered {
@@ -274,9 +284,8 @@ input[type = text], textarea {
 
 #itemDescDiv.entered:active {
     transform: translatey(-2px);
-    transition: .0s;
+    transition: 0s;
 }
-
 
 @keyframes selectDiv {
     10% {transform: translatey(-1px);}
@@ -291,6 +300,23 @@ input[type = text], textarea {
     100% {rotate: 0deg}
 }
 
+#exitTA {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0px;
+    margin-left: 2px;
+    font-size: 15px;
+}
+
+#exitTA:hover {
+    color: red;
+}
+
+#itemTextArea {
+    margin-left: 25px;
+    min-width: 50%;
+    min-height: 20%;
+}
 
 
 
