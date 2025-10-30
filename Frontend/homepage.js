@@ -421,15 +421,8 @@ class elmCreator {
 
             mainElm.appendChild(secondCard);
 
-            secondCard.addEventListener('click', (event) => {
-                let popup = itemPopup.createPopup(itemTitle);
-
-                let popupHeader = document.getElementById('pHeaderDiv');
-                let pTitle = document.getElementById('pTitle');
-                pTitle.textContent = itemTitle
-
-                // Allow popup to be dragged around
-                DD.DragwithFullElm(popup, popupHeader);
+            secondCard.addEventListener('click', () => {
+                IP.showItemDetails(itemPopup, itemTitle, DD, ID);
             });
         }
         else {

@@ -254,7 +254,11 @@ input[type = text], textarea {
 }
 
 #itemDescDiv {
+    margin-left: 10px;
+    margin-right: 10px;
     border: 2px solid black;
+    border-radius: 5px;
+    transition: 1s;
 }
 
 #itemDescDiv:hover {
@@ -263,14 +267,28 @@ input[type = text], textarea {
 }
 
 #itemDescDiv.entered {
-    background-color: blue; color: white
+    background-color: blue; color: white;
+    transform: scale(.95);
+    transition: 1s;
 }
 
+#itemDescDiv.entered:active {
+    transform: translatey(-2px);
+    transition: .0s;
+}
+
+
 @keyframes selectDiv {
-    25% {background-color: lightblue; color: grey;}
-    50% {background-color: rgb(115, 180, 202); color: rgb(155, 151, 151);}
-    75% {background-color: rgb(60, 80, 145); color: rgb(214, 208, 208);}
-    100% {background-color: blue; color: white};
+    10% {transform: translatey(-1px);}
+    20% {transform: translatey(-2px);}
+    30% {transform: translatey(-3px);}
+    40% {transform: translatey(-2px);}
+    50% {transform: translatey(-1px);}
+    60% {rotate: 1deg;}
+    70% {rotate: -1deg;}
+    80% {rotate: 1deg;}
+    90% {rotate: -1deg;}
+    100% {rotate: 0deg}
 }
 
 
