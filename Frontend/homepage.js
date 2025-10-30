@@ -293,9 +293,10 @@ class itemPage {
         pTitle.textContent = itemTitle || undefined;
 
         let contentDiv = document.getElementById('pContentDiv');
+        let itemDescDiv = elmc.createElem(contentDiv, 'itemDescDiv', 'empty', 'div');
 
         let getItem = await this.getItemDetails(ID);
-        let itemDesc = elmc.createElem(contentDiv, 'itemDesc', 'empty', 'h4');
+        let itemDesc = elmc.createElem(itemDescDiv, 'itemDesc', 'empty', 'h4');
 
         if (getItem === undefined) {
             itemDesc.textContent = 'Content Not Found';
@@ -311,6 +312,29 @@ class itemPage {
 
         // Allow popup to be dragged around
         DD.DragwithFullElm(popup, popupHeader);
+
+        let hoverTimeout;
+
+        itemDescDiv.addEventListener('mouseenter', () => {
+
+            clearTimeout(hoverTimeout); 
+
+                hoverTimeout = setTimeout(() => {
+                    itemDescDiv.classList.add('entered');
+                }, 1000);
+        })
+
+        itemDescDiv.addEventListener('mouseleave', () => {
+            // Clear the timeout when the mouse leaves to prevent the class from being added
+            clearTimeout(hoverTimeout);
+            
+            // Immediately remove the class
+            itemDescDiv.classList.remove('entered');
+        });
+
+        // itemDescDiv.addEventListener('click', () => {
+
+        // })
     }
 
     async getItemDetails(ID) {

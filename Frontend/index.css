@@ -249,4 +249,30 @@ input[type = text], textarea {
     visibility: hidden;
 }
 
+#itemDesc {
+    margin-left: 5px;
+}
+
+#itemDescDiv {
+    border: 2px solid black;
+}
+
+#itemDescDiv:hover {
+    animation: selectDiv;
+    animation-duration: 1s;
+}
+
+#itemDescDiv.entered {
+    background-color: blue; color: white
+}
+
+@keyframes selectDiv {
+    25% {background-color: lightblue; color: grey;}
+    50% {background-color: rgb(115, 180, 202); color: rgb(155, 151, 151);}
+    75% {background-color: rgb(60, 80, 145); color: rgb(214, 208, 208);}
+    100% {background-color: blue; color: white};
+}
+
+
+
 
