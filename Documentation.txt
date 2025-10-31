@@ -3,33 +3,101 @@ Tech Stack
     - HTML, CSS, Javascript
 - Backend 
     - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
+- Hosting/Operations
+    - AWS: EC2 (for now)
+    - NodeJS Server for Backend
+    - NGINX server for Backend
+    - PostgreSQL database 
 
-// Installs and Server Run Commands
+Setting up Hosting:
+- Create EC2 instance in AWS console
+- Connect to instance via SSH
+- Update and upgrade instance in SSH  (first time) 
+    - sudo apt update 
+    - sudo apt upgrade
+- Generate SSH key in terminal
+    -  ssh-keygen -t ed25519 -C "insertEmail@email.com"
+- Show Public Key value for SSH Key
+    - cat id_ed25519.pub
+- Copy Public Key Value into a new SSH Public Key in Github
+- Clone repository into instance 
+    - git clone git@github.com:Aaron-S117/ProjectTTC.git
+- Go through server commands
 
--- Done on first pull
+// Installs and Server Run Commands (try to run these in order)
+
+- Install NodeJS
+    - sudo apt install nodejs npm
+
 Initialize NodeJs file using npm (Node Package Manager) ():
-- npm init (inside backend folder)
-    - This creates the package.json file that allows for node.js configuration and your node.js server to run
+- This creates the package.json file that allows for node.js configuration and your node.js server to run
+    - npm init (inside backend folder)
 
--- Done on first pull
 Install dotenv for enviornment configuration:
-- npm install dotenv (inside backend folder)
-    - installs dotenv library/dependecies for reading and modifying the .env config file
+- installs dotenv library/dependecies for reading and modifying the .env config file
+    - npm install dotenv (inside backend folder)
 
--- Done on first pull
+- Create .env File in Backend folder (see next item for necessary data stored in .env file)
+    - touch .env (inside backend folder)
+
+- Access .env file to modify data
+    - vim .env
+
+- Input necessary credentials into .env file (can be done via VIM if you're brave enough). I.E:
+    baseURL="http://localhost"
+    backendPort="3000"
+
+    // PostgreSQL Credentials
+    user="postgres"
+    password="friday01"
+    host="127.0.0.1"
+    port="5432"
+    database="postgres"
+    
 - change "type" value in package.json (Backend folder) to "module"
     - Allows server.js file to import dependecies
 
--- Done on first pull 
 - npm install pg
     - Installs node-postgres sql library for querying postgres database in NodeJS 
 
+- install postgreSQL database with extra contrib package for util
+    - sudo apt install postgresql postgresql-contrib
+
+- Check Database status 
+    - sudo systemctl status postgresql
+
+- Check psql version
+    - sudo -u postgres psql -c "SELECT version();"
+
+- go into database CLI
+    - sudo -i -u postgres
+
+- Check psql instance 
+    - psql
+
+- Exit CLI
+    - \q
+
+- sudo -u postgres psql
+    - ALTER USER postgres PASSWORD 'your_secure_password';
+
+- Exit CLI
+    - \q
+
+- Install NGINX server
+    - sudo apt install nginx
+
+- Check status (when connecting via the EC2 instance IP make sure inbound rules are set correctly)
+    - sudo systemctl status nginx
+
+AWS Nginx FrontEnd server start:
+- sudo systemctl start nginx
 
 Non-docker FrontEnd server start:
-- python -m http.server 8080
+- python -m http.server 8080 (inside frontend folder)
 
 Non-docker BackEnd server start: 
-- node server.js 
+- node server.js (inside backend folder)
 
 // Table Schema
 Users 
