@@ -99,8 +99,10 @@ class homepage {
             console.log('Collection Creation Suceeded');
 
             const homepageDiv = document.getElementById('homepageDiv');
+
+            let elmc = new elmCreator;
             
-            this.createCard(homepageDiv, title.value);
+            elmc.createCard(homepageDiv, title.value);
         }
         else {
             // todo 
