@@ -120,7 +120,7 @@ const backendPort = process.env.backendPort;
 const server = http.createServer(async (req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); // Allow POST for /UserLogin
     res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Allow the Content-Type header
 
