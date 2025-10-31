@@ -33,6 +33,28 @@ Initialize NodeJs file using npm (Node Package Manager) ():
 - This creates the package.json file that allows for node.js configuration and your node.js server to run
     - npm init (inside backend folder)
 
+- change "type" value in package.json (Backend folder) to "module"
+    - Allows server.js file to import dependecies
+
+Example: 
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend nodejs server",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "ping",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "pg": "^8.16.3"
+  }
+}
+
 Install dotenv for enviornment configuration:
 - installs dotenv library/dependecies for reading and modifying the .env config file
     - npm install dotenv (inside backend folder)
@@ -53,12 +75,9 @@ Install dotenv for enviornment configuration:
     host="127.0.0.1"
     port="5432"
     database="postgres"
-    
-- change "type" value in package.json (Backend folder) to "module"
-    - Allows server.js file to import dependecies
 
-- npm install pg
-    - Installs node-postgres sql library for querying postgres database in NodeJS 
+- Installs node-postgres sql library for querying postgres database in NodeJS 
+    - npm install pg
 
 - install postgreSQL database with extra contrib package for util
     - sudo apt install postgresql postgresql-contrib
@@ -87,8 +106,16 @@ Install dotenv for enviornment configuration:
 - Install NGINX server
     - sudo apt install nginx
 
+- nginx folder path (for reference)
+    - /etc/nginx
+
 - Check status (when connecting via the EC2 instance IP make sure inbound rules are set correctly)
     - sudo systemctl status nginx
+
+- WARNING: MAKE SURE THE FRONTEND FILES HAVE THE CORRECT READ WRITE PERMISSIONS and THE CORRECT baseURL 
+    - baseURL: 'http://ec2instancePublicIP:3000/'
+    - for the ubuntu and children folders they should a permission set of "read and write for others"
+        - This looks something like: chmod -R o+rw /home/ubuntu
 
 AWS Nginx FrontEnd server start:
 - sudo systemctl start nginx
