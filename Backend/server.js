@@ -331,7 +331,7 @@ const server = http.createServer(async (req, res) => {
             let parsedBody = JSON.parse(body);
 
             let query = `INSERT INTO item 
-            ("collectionID", "ItemName", "itemvalue")
+            ("collectionID", "ItemName", "ItemValue")
             VALUES ('${parsedBody.collectionID}', '${parsedBody.itemName}', '${parsedBody.itemValue}')`
 
             try {
