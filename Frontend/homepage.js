@@ -425,6 +425,8 @@ class elmCreator {
         let DD = new DDImp.Draggin;
         let IP = new itemPage;
 
+        console.log(ID);
+
         if (cardNumber === 1) {
 
             let firstCard = document.createElement('div');
