@@ -304,7 +304,7 @@ class itemPage {
             itemDesc.textContent = 'Content Not Found';
         }
         else {
-            itemDesc.textContent = getItem.itemvalue;
+            itemDesc.textContent = getItem.ItemValue;
         }
 
         let textAreaDiv = elmc.createElem(contentDiv, 'textAreaDiv', 'empty', 'div');
