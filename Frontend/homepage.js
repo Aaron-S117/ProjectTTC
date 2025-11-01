@@ -316,7 +316,7 @@ class itemPage {
         
         let itemTextArea = elmc.createElem(textAreaDiv, 'itemTextArea', 'empty', 'textarea');
         itemTextArea.classList.add('itemTextArea');
-        itemTextArea.textContent = getItem.itemvalue || undefined
+        itemTextArea.textContent = getItem.ItemValue || undefined
     
         let footerDiv = elmc.createElem(popup, 'newItemfooterDiv', 'empty', 'div');
         let footerSaveBut = elmc.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
