@@ -262,12 +262,13 @@ const server = http.createServer(async (req, res) => {
                 // Initial Query
                 // TODO Make USER ID Encrypted on frontend
                 let sqlQuery = `Insert INTO collection ("userID", "collectionTitle")
-                VALUES ('${parsedbody.user}', '${parsedbody.title}')`
+                VALUES ('${parsedbody.user}', '${parsedbody.title}')
+                returning "ID"`
 
                 let createCollection = await client.query(sqlQuery);
 
                 res.statusCode = 201;
-                res.end('Collection Created');
+                res.end(JSON.stringify(createCollection.rows[0]));
            } catch (err) {
                 console.log(err);
                 res.statusCode = 400;
@@ -332,13 +333,16 @@ const server = http.createServer(async (req, res) => {
 
             let query = `INSERT INTO item 
             ("collectionID", "ItemName", "ItemValue")
-            VALUES ('${parsedBody.collectionID}', '${parsedBody.itemName}', '${parsedBody.itemValue}')`
+            VALUES ('${parsedBody.collectionID}', '${parsedBody.itemName}', '${parsedBody.itemValue}')
+            RETURNING "ID"`
+
+            console.log(query);
 
             try {
                 let insertQuery = await client.query(query);
 
                 res.statusCode = 201;
-                res.end(JSON.stringify(insertQuery))
+                res.end(JSON.stringify(insertQuery.rows))
             }catch (err) {
                 res.statusCode = 500;
                 res.end('Issue with creating item. ' + err);

@@ -101,8 +101,10 @@ class homepage {
             const homepageDiv = document.getElementById('homepageDiv');
 
             let elmc = new elmCreator;
+
+            let resJson = await response.json()
             
-            elmc.createCard(homepageDiv, title.value);
+            elmc.createCard(homepageDiv, title.value, resJson.ID);
         }
         else {
             // todo 
@@ -220,7 +222,6 @@ class itemPage {
 
             let itemPM = new itemPage;
 
-
             let creatingItem = await itemPM.createItem(itemTitle, itemDesc, collectionID);
 
             let doubleCardDivs = document.getElementsByClassName('doubleCard');
@@ -232,7 +233,7 @@ class itemPage {
                 let doubleCard = document.createElement('div');
                 doubleCard.setAttribute('class', 'doubleCard');
 
-                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1); 
+                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1, creatingItem[0].ID); 
 
                 let mainDiv = document.getElementById('homepageDiv');
                 mainDiv.appendChild(doubleCard);
@@ -242,20 +243,20 @@ class itemPage {
                 let doubleCard = document.createElement('div');
                 doubleCard.setAttribute('class', 'doubleCard');
 
-                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1); 
+                let newCard = await elmC.createItemCard(doubleCard, itemTitle, 1, creatingItem[0].ID); 
 
                 let mainDiv = document.getElementById('homepageDiv');
                 mainDiv.appendChild(doubleCard);
             }
             else if (lastDiv.children.length === 1) {
-                let newCard = await elmC.createItemCard(lastDiv, itemTitle, 2); 
+                let newCard = await elmC.createItemCard(lastDiv, itemTitle, 2, creatingItem[0].ID); 
             }
             else {
                 console.log('No Div to speak of');
             }
 
             popDiv.remove();
-            UWP.popupOpen = false;
+            UWP.markClosePopup();
         })
     }
 
@@ -280,19 +281,21 @@ class itemPage {
             console.error('Issue with creating item: ' + response);
         }
         else {
-            return 'Item Created'; 
+            let resJSON = response.json();
+            return resJSON; 
         }
     }
 
-    async showItemDetails(itemPopup, itemTitle, DD, ID) {
+    async showItemDetails(itemTitle, DD, ID) {
 
         let elmc = new elmCreator;
+        let UW = await import('./usefulWidgets.js');
+        let itemPopup = new UW.PopupModal;
 
-        let popup = itemPopup.createPopup(itemTitle);
+        let popup = await itemPopup.createPopup(itemTitle);
 
         let popupHeader = document.getElementById('pHeaderDiv');
         let pTitle = document.getElementById('pTitle');
-        pTitle.textContent = itemTitle || undefined;
 
         let contentDiv = document.getElementById('pContentDiv');
         let itemDescDiv = elmc.createElem(contentDiv, 'itemDescDiv', 'empty', 'div');
@@ -305,6 +308,7 @@ class itemPage {
         }
         else {
             itemDesc.textContent = getItem.ItemValue;
+            pTitle.textContent = itemTitle || undefined;
         }
 
         let textAreaDiv = elmc.createElem(contentDiv, 'textAreaDiv', 'empty', 'div');
@@ -417,15 +421,11 @@ class elmCreator {
     }
 
     async createItemCard(mainElm, itemTitle, cardNumber, ID) {
-        
-        let UW = await import('./usefulWidgets.js');
+
         let DDImp = await import('./DragnDrop.js');
 
-        let itemPopup = new UW.PopupModal;
         let DD = new DDImp.Draggin;
         let IP = new itemPage;
-
-        console.log(ID);
 
         if (cardNumber === 1) {
 
@@ -437,7 +437,7 @@ class elmCreator {
             mainElm.appendChild(firstCard); 
 
             firstCard.addEventListener('click', () => {
-                IP.showItemDetails(itemPopup, itemTitle, DD, ID);
+                IP.showItemDetails(itemTitle, DD, ID);
             });
         }
         else if (cardNumber === 2) {
@@ -449,7 +449,7 @@ class elmCreator {
             mainElm.appendChild(secondCard);
 
             secondCard.addEventListener('click', () => {
-                IP.showItemDetails(itemPopup, itemTitle, DD, ID);
+                IP.showItemDetails(itemTitle, DD, ID);
             });
         }
         else {

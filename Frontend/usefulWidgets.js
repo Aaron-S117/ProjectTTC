@@ -85,11 +85,14 @@ export class DataView {
 
 export class PopupModal {
     createPopup() {
-
+    
         if(popupOpen === true) {
             console.log('Popup already open!');
 
-            return;
+            let popupDiv = document.getElementById('popupDiv');
+            console.log(popupDiv);
+
+            return popupDiv;
         }
         else {
 
@@ -97,6 +100,7 @@ export class PopupModal {
 
             let popupDiv = document.createElement('div');
             popupDiv.setAttribute('class', 'popupDiv');
+            popupDiv.setAttribute('ID', 'popupDiv');
             
             let headerDiv = document.createElement('div');
             headerDiv.setAttribute('ID', 'pHeaderDiv');
@@ -147,5 +151,8 @@ export class PopupModal {
     }
     exitPopup(mainElm) {
         mainElm.outerHTML = '';
+    }
+    markClosePopup() {
+        popupOpen = false;
     }
 }
