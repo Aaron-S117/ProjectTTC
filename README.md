@@ -11,7 +11,3 @@ PLANS:
 - Add Signout button
 - Add page saving for main pages
 - Deploy to AWS for Testing and Production
-
-Known Issues:
-- Creating Item on a collection page can only be done once per session. This has to do with the popup variable inside the useful widgets javascript file
-- When creating a new item in a collection, after saving it doesn't allow you to view the description of that item, or any other item on that page.
