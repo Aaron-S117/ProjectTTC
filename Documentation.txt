@@ -5,6 +5,7 @@ Tech Stack
     - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
 - Hosting/Operations
     - AWS: EC2 (for now)
+    - Ubuntu
     - NodeJS Server for Backend
     - NGINX server for Backend
     - PostgreSQL database 
