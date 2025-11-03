@@ -8,6 +8,9 @@ Tech Stack
     - NodeJS Server for Backend
     - NGINX server for Backend
     - PostgreSQL database 
+- Code Repository and Versioning 
+    - Git
+    - Github
 
 Setting up Hosting:
 - Create EC2 instance in AWS console
