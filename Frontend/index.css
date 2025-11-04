@@ -318,5 +318,16 @@ input[type = text], textarea {
     min-height: 20%;
 }
 
+#cardDelete {
+    z-index: 1000;
+}
+
+#infoDiv {
+    position: fixed;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+
 
 

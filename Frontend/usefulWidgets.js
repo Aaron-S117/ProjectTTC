@@ -83,6 +83,31 @@ export class DataView {
 
 }
 
+export class hoverInfo {
+    createHover(event, infoText) {
+        let infoDiv = document.createElement('div');
+        infoDiv.id = 'infoDiv';
+        infoDiv.textContent = infoText;
+
+        let body = document.getElementsByTagName('body')[0];
+
+        body.appendChild(infoDiv);
+        
+        this.setPosition(infoDiv, event);
+
+        return 'Info Created'
+    }   
+    setPosition(hoverelm, event) {
+        let leftPos = event.clientX;
+        let topPos = event.clientY ;
+
+        console.log(leftPos, topPos);
+
+        hoverelm.style = `top: ${topPos}; left: ${leftPos}`;
+    }
+
+}
+
 export class PopupModal {
     createPopup() {
     

@@ -404,7 +404,10 @@ class elmCreator {
         return elem;
     }
 
-    createCard = async (mainElm, cardTitle, collectionID) => {
+    async createCard(mainElm, cardTitle, collectionID) {
+        let UWImp = await import('./usefulWidgets.js');
+        let DI = new UWImp.hoverInfo;
+
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
         card.setAttribute('draggable', 'true');
@@ -413,11 +416,30 @@ class elmCreator {
         mainElm.appendChild(card);
 
         let itemPageCreator = new itemPage;
-
+        let entered = false;
+        
         card.addEventListener('click', () => {
             localStorage.setItem('currentCollectionID', collectionID);
             itemPageCreator.createItempage(card);
         });
+
+        card.addEventListener('mouseover', (event) => {
+            if (entered === false) {
+                entered = true;
+                setTimeout(() => {
+                    DI.createHover(event, 'Collection Card. Click to see collection items, Drag left to edit, and drag right to delete.');
+                }, 2000);
+            }
+            else if (entered === true) {
+                // already entered, don't do anything, until leave
+            }
+        })
+
+        card.addEventListener('mouseleave', (event) => {
+            entered = false;
+            let infodiv = document.getElementById('infoDiv');
+            infodiv.remove(); 
+        })
     }
 
     async createItemCard(mainElm, itemTitle, cardNumber, ID) {
