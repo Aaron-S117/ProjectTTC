@@ -4,6 +4,7 @@ This app will expand greatly with time and my growing knowledge of website devel
 
 PLANS:
 - Get Collection, Collection Item, and Homepage workflows done as an MVP (Minimum Viable Product)
+- Add Ability to edit collection title.
 - Screen app for security, adding API authentication and encrypted/hashing relevant data
 - Finalize and beutify UI and maximize UX
 - Add Signout button
