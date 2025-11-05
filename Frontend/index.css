@@ -324,9 +324,15 @@ input[type = text], textarea {
 
 #infoDiv {
     position: fixed;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.75);
     color: white;
     border: 1px solid white;
+}
+
+#infoText {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 14px;
 }
 
 

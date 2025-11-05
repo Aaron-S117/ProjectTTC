@@ -417,6 +417,7 @@ class elmCreator {
 
         let itemPageCreator = new itemPage;
         let entered = false;
+        let hoverTimeout;
         
         card.addEventListener('click', () => {
             localStorage.setItem('currentCollectionID', collectionID);
@@ -426,19 +427,21 @@ class elmCreator {
         card.addEventListener('mouseover', (event) => {
             if (entered === false) {
                 entered = true;
-                setTimeout(() => {
-                    DI.createHover(event, 'Collection Card. Click to see collection items, Drag left to edit, and drag right to delete.');
-                }, 2000);
-            }
-            else if (entered === true) {
-                // already entered, don't do anything, until leave
+                hoverTimeout = setTimeout(() => {
+                    DI.createHover(event, 'Collection Card. Click to see collection items, drag left to edit, and drag right to delete.');
+                }, 1000);
             }
         })
 
         card.addEventListener('mouseleave', (event) => {
             entered = false;
+
+            clearTimeout(hoverTimeout);
+
             let infodiv = document.getElementById('infoDiv');
-            infodiv.remove(); 
+            if (infodiv) {
+                infodiv.remove(); 
+            }
         })
     }
 

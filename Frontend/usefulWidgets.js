@@ -83,11 +83,39 @@ export class DataView {
 
 }
 
+// Allows you to create an element that hovers over your cursor 
 export class hoverInfo {
+
+    // // Example using this 
+    // card.addEventListener('mouseover', (event) => {
+    //     if (entered === false) {
+    //         entered = true;
+    //         hoverTimeout = setTimeout(() => {
+    //             DI.createHover(event, 'Collection Card. Click to see collection items, Drag left to edit, and drag right to delete.');
+    //         }, 2000);
+    //     }
+    // })
+
+    // card.addEventListener('mouseleave', (event) => {
+    //     entered = false;
+
+    //     clearTimeout(hoverTimeout);
+
+    //     let infodiv = document.getElementById('infoDiv');
+    //     if (infodiv) {
+    //         infodiv.remove(); 
+    //     }
+    // })
+
     createHover(event, infoText) {
         let infoDiv = document.createElement('div');
         infoDiv.id = 'infoDiv';
-        infoDiv.textContent = infoText;
+        
+        let infoTextElm = document.createElement('p');
+        infoTextElm.textContent = infoText;
+        infoTextElm.id = 'infoText';
+
+        infoDiv.appendChild(infoTextElm);
 
         let body = document.getElementsByTagName('body')[0];
 
@@ -99,7 +127,7 @@ export class hoverInfo {
     }   
     setPosition(hoverelm, event) {
         let leftPos = event.clientX;
-        let topPos = event.clientY ;
+        let topPos = event.clientY;
 
         console.log(leftPos, topPos);
 
