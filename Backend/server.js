@@ -121,7 +121,7 @@ const server = http.createServer(async (req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); // Allow POST for /UserLogin
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"); // Allow POST for /UserLogin
     res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Allow the Content-Type header
 
     if (req.method === 'OPTIONS') {
@@ -259,8 +259,6 @@ const server = http.createServer(async (req, res) => {
            let parsedbody = JSON.parse(body);
 
            try {
-                // Initial Query
-                // TODO Make USER ID Encrypted on frontend
                 let sqlQuery = `Insert INTO collection ("userID", "collectionTitle")
                 VALUES ('${parsedbody.user}', '${parsedbody.title}')
                 returning "ID"`
@@ -369,6 +367,57 @@ const server = http.createServer(async (req, res) => {
             res.end('Issue getting item data.' + err);
         }
     }
+    else if (parsedUrl.pathname === '/editItem' && method === "PATCH") {
+
+        let body = '';
+
+         // Used to get the request body. Creates a event listener that takes time to complete
+         req.on('data', chunk => {
+            body += chunk.toString(); // Append each chunk to the body string
+        });
+        req.on('end', async () => {
+           res.statusCode = 200;
+           
+           let parsedbody = JSON.parse(body);
+
+           try {
+
+                let setClause = "";
+
+                let objectSize = checkLength(parsedbody.Columns);
+
+                let endCounter = 1;
+   
+                for (let column in parsedbody.Columns) {
+
+                    let columnVal = parsedbody.Columns[column]
+                    if (endCounter < objectSize) {
+                        setClause += `"${column}" = '${columnVal}',`;   
+                        endCounter++;
+                    }
+                    else if (endCounter === objectSize) {
+                        setClause += `"${column}" = '${columnVal}'`;   
+                    }
+                }
+
+                let sqlQuery = `UPDATE item SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
+
+                console.log(sqlQuery);
+
+                let editItem =  await client.query(sqlQuery);
+
+                res.statusCode = 201;
+                res.end(JSON.stringify(editItem));
+           } catch (err) {
+                console.log(err);
+                res.statusCode = 400;
+                res.end('Issue Modifying Item');
+           } finally {
+               // todo
+           }
+
+        })
+    }
     else {
         // Handle all other unmatched routes
         res.statusCode = 404;
@@ -381,3 +430,9 @@ const port = backendPort;
 server.listen(port, () => {
     console.log(`Server running at ${baseURL}:${port}`);
 })
+
+function checkLength(object) {
+    let objectSize = Object.keys(object).length;
+
+    return objectSize;
+}

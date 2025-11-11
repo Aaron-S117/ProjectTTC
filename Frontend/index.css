@@ -179,7 +179,7 @@
 .doubleCard {
     display: flex;
     gap: 1rem;
-    margin-left: -23vh;
+    margin-left: -22vh;
 }
 
 .card1, .card2 {
