@@ -371,6 +371,8 @@ const server = http.createServer(async (req, res) => {
 
         let body = '';
 
+ 
+
          // Used to get the request body. Creates a event listener that takes time to complete
          req.on('data', chunk => {
             body += chunk.toString(); // Append each chunk to the body string
@@ -378,6 +380,7 @@ const server = http.createServer(async (req, res) => {
         req.on('end', async () => {
            res.statusCode = 200;
            
+           console.log("Body: " + body);
            let parsedbody = JSON.parse(body);
 
            try {

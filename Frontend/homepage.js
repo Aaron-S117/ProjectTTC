@@ -303,11 +303,14 @@ class itemPage {
         let getItem = await this.getItemDetails(ID);
         let itemDesc = elmc.createElem(itemDescDiv, 'itemDesc', 'empty', 'h4');
 
+        let itemDescStart = '';
+
         if (getItem === undefined) {
             itemDesc.textContent = 'Content Not Found';
         }
         else {
             itemDesc.textContent = getItem.ItemValue;
+            itemDescStart = getItem.ItemValue
             pTitle.textContent = itemTitle || undefined;
         }
 
@@ -326,6 +329,32 @@ class itemPage {
         let footerSaveBut = elmc.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
         footerSaveBut.classList.add('hide');
         footerSaveBut.textContent = 'Save';
+
+        // Change value in DOM on change
+        itemTextArea.addEventListener('input', (event)=> {
+            itemTextArea.textContent = event.target.value
+        })
+
+        footerSaveBut.addEventListener('click', () => {
+            let checkDesc = document.getElementById('itemTextArea').textContent;
+
+            if (itemDescStart === checkDesc) {
+                console.log(`Information hasn't changed`);
+            }
+            else {
+                // Columns being edited to pass onto the API for saving
+                let columns = {
+                    "ItemValue": checkDesc
+                }
+
+                // API call for editing the items, uses the item ID, and any columns we're passing into it
+                let editItem = this.editItemCall(ID, columns)
+
+                console.log(editItem);
+
+                popup.remove();
+            }
+        });
 
         // Allow popup to be dragged around
         DD.DragwithFullElm(popup, popupHeader);
@@ -367,6 +396,7 @@ class itemPage {
     }
 
     async getItemDetails(ID) {
+
         let response = await fetch(baseURL + 'getItem?itemID=' + ID, {
             method: 'GET',
             headers: {
@@ -381,8 +411,32 @@ class itemPage {
         }
         else {
             // return array for the first value
-            let responseArray = await response.json()
+            let responseArray = await response.json();
             return responseArray[0];
+        }
+    }
+
+    // Call item edit API to change data in database
+    async editItemCall(ID, columns) {
+        let payload = {
+            "ID": ID,
+            "Columns" : columns
+        }
+
+        let response = await fetch(baseURL + 'editItem', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+
+        if(!response.ok) {
+            console.error('Issue editing data');
+        }
+        else {
+            let responseArray = await response.json();
+            return responseArray;
         }
     }
 }
