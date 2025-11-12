@@ -371,10 +371,8 @@ const server = http.createServer(async (req, res) => {
 
         let body = '';
 
- 
-
-         // Used to get the request body. Creates a event listener that takes time to complete
-         req.on('data', chunk => {
+        // Used to get the request body. Creates a event listener that takes time to complete
+        req.on('data', chunk => {
             body += chunk.toString(); // Append each chunk to the body string
         });
         req.on('end', async () => {
@@ -404,8 +402,6 @@ const server = http.createServer(async (req, res) => {
                 }
 
                 let sqlQuery = `UPDATE item SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
-
-                console.log(sqlQuery);
 
                 let editItem =  await client.query(sqlQuery);
 

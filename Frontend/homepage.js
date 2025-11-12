@@ -339,7 +339,8 @@ class itemPage {
             let checkDesc = document.getElementById('itemTextArea').textContent;
 
             if (itemDescStart === checkDesc) {
-                console.log(`Information hasn't changed`);
+                // Placeholder alert
+                alert("Information hasn't changed");
             }
             else {
                 // Columns being edited to pass onto the API for saving
@@ -350,9 +351,8 @@ class itemPage {
                 // API call for editing the items, uses the item ID, and any columns we're passing into it
                 let editItem = this.editItemCall(ID, columns)
 
-                console.log(editItem);
-
                 popup.remove();
+                itemPopup.markClosePopup();
             }
         });
 
@@ -403,8 +403,6 @@ class itemPage {
                 'Content-Type': 'application/json'
             }
         })
-
-        console.log(response);
 
         if (!response.ok) {
             console.error('Issue getting item data');
