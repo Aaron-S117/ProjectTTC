@@ -28,6 +28,15 @@
     gap: 10px;
 }
 
+#itemBack {
+    background-color: transparent;
+    color: blue;
+    border: 0;
+    margin-right: -7px;
+    margin-top: 2px;
+    margin-left: -40px;
+}
+
 .card {
     background-color: lightgrey;
     border: solid grey 1px;
@@ -179,7 +188,7 @@
 .doubleCard {
     display: flex;
     gap: 1rem;
-    margin-left: -22vh;
+    margin-left: -21vh;
 }
 
 .card1, .card2 {

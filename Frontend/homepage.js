@@ -1,8 +1,16 @@
 const baseURL = 'http://localhost:3000/'
 
+// Takes use to homepage
 export async function homepageHandler() {
     let homePageHandler = new homepage;
     await homePageHandler.createHomePage();
+}
+
+// Take user to latest stored collection
+export async function collectionpageHandler() {
+    let collectionID = localStorage.getItem('currentCollectionID');
+    let collectionpageHandler = new itemPage;
+    await collectionpageHandler.createItempage(collectionID);
 }
 
 class homepage {
@@ -113,10 +121,10 @@ class homepage {
 }
 
 class itemPage {
-    async createItempage(mainElm) {
+    async createItempage(id) {
 
         let elmC = new elmCreator;
-        let collectionID = mainElm.id;
+        let collectionID = id;
 
         let body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
@@ -126,6 +134,17 @@ class itemPage {
         mainDiv.classList.add('mainDiv');
 
         let HeaderDiv = elmC.createElem(mainDiv, 'headerDiv', 'empty', 'div');
+
+        let backButton = elmC.createElem(HeaderDiv, 'itemBack', 'empty', 'button');
+        backButton.textContent = '< Back';
+
+        backButton.addEventListener('click', () => {
+            let homepageSetup = new homepage;
+
+            homepageSetup.createHomePage();
+            localStorage.setItem('currentCollectionID', '');
+            localStorage.setItem('page', 'Homepage');
+        })
 
         let pageTitle = elmC.createElem(HeaderDiv, 'itemsTitle', 'empty', 'h2');
         pageTitle.textContent = 'Collection Items';
@@ -473,7 +492,8 @@ class elmCreator {
         
         card.addEventListener('click', () => {
             localStorage.setItem('currentCollectionID', collectionID);
-            itemPageCreator.createItempage(card);
+            localStorage.setItem('page', 'Collection');
+            itemPageCreator.createItempage(collectionID);
         });
 
         card.addEventListener('mouseover', (event) => {

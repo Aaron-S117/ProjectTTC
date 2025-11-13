@@ -11,8 +11,19 @@ if (storedUser != ''){
             break;
         case 'Homepage':
             console.log('Going to homepage');
-            HandleHomepage();
+            handleHomepage();
             break;
+        case 'Collection':
+            console.log('Going to Collection');
+            let collectionID = localStorage.getItem('currentCollectionID');
+            if (collectionID === null || collectionID === ''){
+                console.log('Collection not found, going to homepage');
+                break;
+            }
+            else {
+                handleCollectionPage();
+                break;
+            }
         default:
             console.log('Nothing of importance happened');
     }
@@ -82,20 +93,27 @@ async function HandleLogin() {
         localStorage.setItem('lastLogin', Date.now());
 
         // Create Homepage
-        await HandleHomepage();
+        await handleHomepage();
     }
     else {
         alert('Incorrect Username or Password');
     }
 }
 
-async function HandleHomepage() {
+async function handleHomepage() {
     console.log('This is the homepage');
 
     const homepageImport = await import ('./homepage.js');
     await homepageImport.homepageHandler();
 
     localStorage.setItem('page', 'Homepage');
+}
+
+async function handleCollectionPage() {
+    const homepageImport = await import ('./homepage.js');
+    await homepageImport.collectionpageHandler();
+
+    localStorage.setItem('page', 'Collection');
 }
 
 const CARButton = document.getElementById("CreateAccountLink");
