@@ -15,6 +15,23 @@ export async function collectionpageHandler() {
 
 class homepage {
 
+    createLogout() {
+
+        let elmc = new elmCreator;
+
+        let body = document.getElementsByTagName('body')[0];
+
+        let logOut = elmc.createElem(body, 'logOut', 'empty', 'button');
+
+        logOut.textContent = 'SIGN OUT';
+
+        logOut.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.reload();
+        })
+
+    }
+
     async createHomePage() {
 
         let elmC = new elmCreator;
@@ -24,6 +41,9 @@ class homepage {
         // Retrieve and clear body tag
         const body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
+
+        // Creates log out button
+        this.createLogout();
 
         // import sidebar file for later appending
         let widgets = await import('./usefulWidgets.js');
@@ -128,6 +148,10 @@ class itemPage {
 
         let body = document.getElementsByTagName('body')[0];
         body.innerHTML = '';
+
+        let home = new homepage;
+        // Creates log out button
+        home.createLogout();
         
         // create the main div where all the collection cards will be stored
         let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
