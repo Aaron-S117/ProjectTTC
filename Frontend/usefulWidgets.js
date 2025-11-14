@@ -13,22 +13,28 @@ export function setSidebar(mainElm) {
     sidebarButton.addEventListener('click', () => {
         console.log('toggling sidebar');
     
-        let sidebarContent = document.getElementById("sidebarContent");
-    
-        if (sidebarOpen === false) {
-            sidebarContent.setAttribute("class", "sidebarContentsOpened");
-            sidebar.classList.toggle('active');
-            sidebarButton.classList.toggle('active')
-            sidebarOpen = true;
-        }
-        else if (sidebarOpen === true) {
-            sidebarContent.setAttribute("class", "sidebarContentsClosed");
-            sidebar.classList.toggle('active');
-            sidebarButton.classList.toggle('active')
-            sidebarOpen = false;
-        }
-        
+        this.toggleSidebar();
     });
+}
+
+// used to toggle sidebar open and closed states
+export function toggleSidebar() {
+    let sidebarContent = document.getElementById("sidebarContent");
+    let sidebar = document.getElementById("sidebar");
+    let sidebarButton = document.getElementById("sidebarButton");
+
+    if (sidebarOpen === false) {
+        sidebarContent.setAttribute("class", "sidebarContentsOpened");
+        sidebar.classList.toggle('active');
+        sidebarButton.classList.toggle('active')
+        sidebarOpen = true;
+    }
+    else if (sidebarOpen === true) {
+        sidebarContent.setAttribute("class", "sidebarContentsClosed");
+        sidebar.classList.toggle('active');
+        sidebarButton.classList.toggle('active')
+        sidebarOpen = false;
+    }
 }
 
 class sidebarBuilder {

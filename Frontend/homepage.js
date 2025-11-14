@@ -1,3 +1,5 @@
+let widgets = await import('./usefulWidgets.js');
+
 const baseURL = 'http://localhost:3000/'
 
 // Takes use to homepage
@@ -45,9 +47,8 @@ class homepage {
         // Creates log out button
         this.createLogout();
 
-        // import sidebar file for later appending
-        let widgets = await import('./usefulWidgets.js');
-        let sidebar = new widgets.setSidebar(body);
+        // creating sidebar on homepage
+        let sidebar = widgets.setSidebar(body);
         
         // create the main div where all the collection cards will be stored
         let mainDiv = elmC.createElem(body, 'homepageDiv', 'empty', 'div');
@@ -64,6 +65,8 @@ class homepage {
         // Generate create collection textbox and event handler for appending collection to database
         let createCTBX = elmC.createElem(mainDiv, 'collectionBox', 'text', 'input');
         createCB.addEventListener('click', this.createCollection)
+
+        let optionsButton = elmC.createOptions(mainDiv);
 
         let retrieveCollections = this.retrieveCollection();
     }
@@ -576,5 +579,16 @@ class elmCreator {
         else {
             // todo
         }
+    }
+
+    createOptions(mainElm) {
+        let optionBtn = this.createElem(mainElm, 'optionsBtn', 'empty', 'button');
+        optionBtn.textContent = 'Options';
+
+        optionBtn.addEventListener('click', ()=> {
+            widgets.toggleSidebar();
+        })
+
+        return optionBtn;
     }
 }
