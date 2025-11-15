@@ -9,6 +9,7 @@ PLANS:
 - Optimize code, narrowing down expensive workflows
 - Finalize and beutify UI and maximize UX
 - Deploy to AWS for Testing and Production
+- Add admin panel and associated CRUD
 
 FINISHED PLANS:
 - Add Signout button
