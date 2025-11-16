@@ -405,5 +405,37 @@ input[type = text], textarea {
     border: 2px double yellow !important;
 }
 
+#editButtonDiv {
+    display: flex;
+    flex-direction: column;
+    width: 2.2vh;
+    gap: 2px;
+}
+
+#stopEdit {
+    position: relative;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 100px;
+    color: red;
+    font-size: 12px;
+    text-align: center;
+}
+
+#submitEdit {
+    position: relative;
+    background-color: transparent;
+    border: 2px solid green;
+    border-radius: 100px;
+    color: green;
+    font-size: 12px;
+}
+
+#editTA {
+    position: relative;
+    right: -27;
+    top: -40;
+    max-width: 90%;
+}
 
 

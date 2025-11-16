@@ -571,7 +571,7 @@ class elmCreator {
             if (selectionCreated === false) {
                 selectionCreated = true;
  
-                this.createSelectionDrops(cardSection, event.target);
+                this.createSelectionDrops(cardSection, event.target, cardTitle);
             } 
             else if (selectionCreated === true) {
                 // make sure nothing else is created
@@ -588,7 +588,7 @@ class elmCreator {
     }
 
     // Add selection elements to edit or delete card
-    createSelectionDrops(mainElm, card) {
+    createSelectionDrops(mainElm, card, cardTitle) {
 
         let editDiv = this.createElem(mainElm, 'editDiv', 'empty', 'div', true);
         editDiv.textContent = 'Edit Div';
@@ -611,8 +611,25 @@ class elmCreator {
             let textValue = card.textContent;
             card.textContent = '';
 
+            let buttonDiv = this.createElem(card, 'editButtonDiv', 'empty', 'div');
+
+            let stopEditButton = this.createElem(buttonDiv, 'stopEdit', 'empty', 'button');
+            stopEditButton.textContent = '-';
+
+            let submitEditButton = this.createElem(buttonDiv, 'submitEdit', 'empty', 'button');
+            submitEditButton.textContent = '+';
+
             let editTextArea = this.createElem(card, 'editTA', 'empty', 'textarea');
             editTextArea.value = textValue;
+
+            stopEditButton.addEventListener('click', () => {
+                buttonDiv.remove();
+                editTextArea.remove();
+
+                card.textContent = cardTitle;
+            })
+
+            //todo submitEditButton.addEventListner('click', () => {}
 
             card.classList.add('editing');
             
