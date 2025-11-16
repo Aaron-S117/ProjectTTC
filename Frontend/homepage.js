@@ -484,7 +484,7 @@ class itemPage {
 }
 
 class elmCreator {
-    createElem(mainElm, id, type, element) {
+    createElem(mainElm, id, type, element, prepend) {
 
         const elem = document.createElement(element);
         if (type === 'empty'){
@@ -493,22 +493,33 @@ class elmCreator {
         else {
             elem.setAttribute('type', type);
         }
+
         elem.setAttribute('id', id);
    
-        mainElm.appendChild(elem);
-    
+        if (prepend === true) {
+            mainElm.prepend(elem);
+        }
+        else {
+            mainElm.appendChild(elem);
+        }
+
         return elem;
     }
 
     async createCard(mainElm, cardTitle, collectionID) {
         let DI = new widgets.hoverInfo;
 
+        let cardSection = document.createElement('div');
+        cardSection.setAttribute('id', 'set' + collectionID);
+        cardSection.setAttribute('class', 'cardSection');
+        mainElm.appendChild(cardSection);
+
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
         card.setAttribute('draggable', 'true');
         card.textContent = cardTitle;
         card.setAttribute('id', collectionID);
-        mainElm.appendChild(card);
+        cardSection.appendChild(card);
 
         let itemPageCreator = new itemPage;
         let entered = false;
@@ -518,6 +529,8 @@ class elmCreator {
             localStorage.setItem('currentCollectionID', collectionID);
             localStorage.setItem('page', 'Collection');
             itemPageCreator.createItempage(collectionID);
+
+            clearTimeout(hoverTimeout);
         });
 
         card.addEventListener('mouseover', (event) => {
@@ -529,9 +542,10 @@ class elmCreator {
             }
         })
 
-        card.addEventListener('mouseleave', (event) => {
+        card.addEventListener('mouseleave', () => {
             entered = false;
 
+            // stops mouseover event listener from executing
             clearTimeout(hoverTimeout);
 
             let infodiv = document.getElementById('infoDiv');
@@ -539,6 +553,49 @@ class elmCreator {
                 infodiv.remove(); 
             }
         })
+
+        // used to prevent creation of multiple selection divs
+        let selectionCreated = false;
+
+        card.addEventListener('drag', () => {
+            // stops mouseover event listener from executing
+            clearTimeout(hoverTimeout);
+            
+            if (selectionCreated === false) {
+                selectionCreated = true;
+ 
+                this.createSelectionDrops(cardSection);
+            } 
+            else if (selectionCreated === true) {
+                // make sure nothing else is created
+            }
+
+        }) 
+
+        card.addEventListener('dragend', () => {
+            this.deleteSelectionDrops();
+            selectionCreated = false;
+        })
+    }
+
+    // Add selection elements to edit or delete card
+    createSelectionDrops(mainElm) {
+
+        let editDiv = this.createElem(mainElm, 'editDiv', 'empty', 'div', true);
+        editDiv.textContent = 'Edit Div';
+
+        let deleteDiv = this.createElem(mainElm, 'deleteDiv', 'empty', 'div');
+        deleteDiv.textContent = 'Delete Div';
+
+    }
+
+    // Remove selection elements
+    deleteSelectionDrops() {
+        let editDiv = document.getElementById('editDiv');
+        let deleteDiv = document.getElementById('deleteDiv');
+
+        editDiv.remove();
+        deleteDiv.remove();
     }
 
     async createItemCard(mainElm, itemTitle, cardNumber, ID) {

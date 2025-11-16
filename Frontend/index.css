@@ -376,5 +376,30 @@ input[type = text], textarea {
     font-size: 14px;
 }
 
+.cardSection {
+    display: flex;
+}
+
+#editDiv {
+    position: absolute;
+    left: -433;
+    color: black;
+    border: 3px dotted greenyellow;
+    background-color: rgba(144, 238, 144, 0.151);
+    border-radius: 5px;
+    height: 105px;
+    min-width: 400px;
+}
+
+#deleteDiv {
+    color: black;
+    border: 2px dotted red;
+    background-color: rgba(231, 71, 71, 0.226);
+    border-radius: 5px;
+    height: 105px;
+    min-width: 400px;
+    margin-left: 3vh;
+}
+
 
 
