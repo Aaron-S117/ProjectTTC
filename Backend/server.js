@@ -366,6 +366,7 @@ const server = http.createServer(async (req, res) => {
             res.end('Issue getting item data.' + err);
         }
     }
+    // combine this and the edit collection APIs into one 
     else if (parsedUrl.pathname === '/editItem' && method === "PATCH") {
 
         let body = '';
@@ -399,6 +400,54 @@ const server = http.createServer(async (req, res) => {
                 }
 
                 let sqlQuery = `UPDATE item SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
+
+                let editItem =  await client.query(sqlQuery);
+
+                res.statusCode = 201;
+                res.end(JSON.stringify(editItem));
+           } catch (err) {
+                console.log(err);
+                res.statusCode = 400;
+                res.end('Issue Modifying Item');
+           } finally {
+               // todo
+           }
+
+        })
+    }
+        else if (parsedUrl.pathname === '/editCollection' && method === "PATCH") {
+
+        let body = '';
+
+        // Used to get the request body. Creates a event listener that takes time to complete
+        req.on('data', chunk => {
+            body += chunk.toString(); // Append each chunk to the body string
+        });
+        req.on('end', async () => {
+           res.statusCode = 200;
+           let parsedbody = JSON.parse(body);
+
+           try {
+
+                let setClause = "";
+
+                let objectSize = checkLength(parsedbody.Columns);
+
+                let endCounter = 1;
+   
+                for (let column in parsedbody.Columns) {
+
+                    let columnVal = parsedbody.Columns[column]
+                    if (endCounter < objectSize) {
+                        setClause += `"${column}" = '${columnVal}',`;   
+                        endCounter++;
+                    }
+                    else if (endCounter === objectSize) {
+                        setClause += `"${column}" = '${columnVal}'`;   
+                    }
+                }
+
+                let sqlQuery = `UPDATE collection SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
 
                 let editItem =  await client.query(sqlQuery);
 
