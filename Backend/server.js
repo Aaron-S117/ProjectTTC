@@ -376,8 +376,6 @@ const server = http.createServer(async (req, res) => {
         });
         req.on('end', async () => {
            res.statusCode = 200;
-           
-           console.log("Body: " + body);
            let parsedbody = JSON.parse(body);
 
            try {
@@ -417,18 +415,58 @@ const server = http.createServer(async (req, res) => {
         })
     }
     else if (parsedUrl.pathname.startsWith('/remove') === true && method === 'DELETE') {
-        if (parsedUrl.pathname.includes('collection') === true) {
-            console.log('remove collection');
-            res.end(JSON.stringify('Test Call 1'));
-        } 
-        else if (parsedUrl.pathname.includes('item') === true) {
-            console.log('remove item');
-            res.end(JSON.stringify('Test Call 2'));
-        }
-        else if (parsedUrl.pathname.includes('user') === true) {
-            console.log('remove user');
-            res.end(JSON.stringify('Test Call 3'));
-        }
+        let sqlQuery = '';
+        let body = '';
+
+        req.on('data', chunk => {
+            body += chunk.toString();
+        })
+
+        req.on('end', async () => {
+            res.statusCode = 200;
+            let parsedbody = JSON.parse(body);
+            let ID = parsedbody.ID;
+
+            try {
+                if (parsedUrl.pathname.includes('/collection') === true) {
+                    sqlQuery = `DELETE FROM collection
+                    WHERE "ID" = '${ID}'`
+
+                    await client.query(sqlQuery);
+
+                    console.log('removed collection: ' + ID);
+                    res.statusCode = 200;
+                    res.end(JSON.stringify('Collection Deleted'));
+                } 
+                else if (parsedUrl.pathname.includes('/item') === true) {
+                    sqlQuery = `DELETE FROM item
+                    WHERE "ID" = '${ID}'`
+
+                    await client.query(sqlQuery);
+
+                    console.log('removed item: ' + ID);
+                    res.statusCode = 200;
+                    res.end(JSON.stringify('Item Deleted'));
+                }
+                else if (parsedUrl.pathname.includes('/user') === true) {
+                    sqlQuery = `DELETE FROM users
+                    WHERE "ID" = '${ID}'`
+
+                    await client.query(sqlQuery);
+
+                    console.log('removed user: ' + ID);
+                    res.statusCode = 200;
+                    res.end(JSON.stringify('User Deleted'));
+                }
+            } catch(err) {
+                console.log('err');
+                res.statusCode = 400;
+                res.end('Issue Deleting Record:' + err);
+            }
+            finally {
+                // todo
+            }
+        })
     }
     else {
         // Handle all other unmatched routes
