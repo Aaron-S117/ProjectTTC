@@ -248,7 +248,7 @@ class itemPage {
         let itemDescText = elmC.createElem(itemDescDiv, 'newItemDescText', 'empty', 'p');
         itemDescText.textContent = 'Item Description';
         itemDescText.setAttribute('class', 'formText1');
-        let itemDescBox = elmC.createElem(itemDescDiv, 'newItemDescBox', '', 'textarea');
+        let itemDescBox = elmC.createElem(itemDescDiv, 'newItemDescBox', 'empty', 'textarea');
 
         let footerDiv = elmC.createElem(popDiv, 'newItemfooterDiv', 'empty', 'div');
         let footerSaveBut = elmC.createElem(footerDiv, 'pSaveButton', 'empty', 'button');
@@ -526,15 +526,22 @@ class elmCreator {
         let hoverTimeout;
         
         card.addEventListener('click', () => {
-            localStorage.setItem('currentCollectionID', collectionID);
-            localStorage.setItem('page', 'Collection');
-            itemPageCreator.createItempage(collectionID);
 
-            clearTimeout(hoverTimeout);
+            if (card.classList.contains('editing') === true) {
+                // do nothing, but allow user to edit
+            }
+            else {
+                
+                localStorage.setItem('currentCollectionID', collectionID);
+                localStorage.setItem('page', 'Collection');
+                itemPageCreator.createItempage(collectionID);
+
+                clearTimeout(hoverTimeout);
+            }
         });
 
         card.addEventListener('mouseover', (event) => {
-            if (entered === false) {
+            if (entered === false && card.classList.contains('editing') === false) {
                 entered = true;
                 hoverTimeout = setTimeout(() => {
                     DI.createHover(event, 'Collection Card. Click to see collection items, drag left to edit, and drag right to delete.');
@@ -600,6 +607,15 @@ class elmCreator {
             // prevent default to allow drop
             event.preventDefault();
             console.log('editing card');
+
+            let textValue = card.textContent;
+            card.textContent = '';
+
+            let editTextArea = this.createElem(card, 'editTA', 'empty', 'textarea');
+            editTextArea.value = textValue;
+
+            card.classList.add('editing');
+            
         })
 
         editDiv.addEventListener('dragenter', () => {
