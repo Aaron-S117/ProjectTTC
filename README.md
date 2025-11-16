@@ -9,6 +9,7 @@ PLANS:
 - Finalize and beutify UI and maximize UX
 - Deploy to AWS for Testing and Production
 - Add admin panel and associated CRUD
+- Combine edit collection and item APIs into one
 
 FINISHED PLANS:
 - Add Signout button
