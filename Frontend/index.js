@@ -116,6 +116,8 @@ async function handleCollectionPage() {
 }
 
 const CARButton = document.getElementById("CreateAccountLink");
+// New bug: Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
+//   at index.js:119:11
 CARButton.addEventListener('click', HandleAccountCreation);
 
 const loginButton = document.getElementById("SignIn");
