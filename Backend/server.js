@@ -138,7 +138,6 @@ const server = http.createServer(async (req, res) => {
     const parsedUrl = new URL(req.url, baseURL);
     // general query parameter variable for later access
     const urlParams = parsedUrl.searchParams;
-
     // get param named name
     // urlParams.get('name');
 
@@ -416,6 +415,20 @@ const server = http.createServer(async (req, res) => {
            }
 
         })
+    }
+    else if (parsedUrl.pathname.startsWith('/remove') === true && method === 'DELETE') {
+        if (parsedUrl.pathname.includes('collection') === true) {
+            console.log('remove collection');
+            res.end(JSON.stringify('Test Call 1'));
+        } 
+        else if (parsedUrl.pathname.includes('item') === true) {
+            console.log('remove item');
+            res.end(JSON.stringify('Test Call 2'));
+        }
+        else if (parsedUrl.pathname.includes('user') === true) {
+            console.log('remove user');
+            res.end(JSON.stringify('Test Call 3'));
+        }
     }
     else {
         // Handle all other unmatched routes
