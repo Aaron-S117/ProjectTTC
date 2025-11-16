@@ -1,4 +1,5 @@
 let widgets = await import('./usefulWidgets.js');
+let DDImp = await import('./DragnDrop.js');
 
 const baseURL = 'http://localhost:3000/'
 
@@ -227,9 +228,7 @@ class itemPage {
     }
     async createItemForm() {
         let elmC = new elmCreator;
-
-        let UW = await import('./usefulWidgets.js');
-        let UWP = new UW.PopupModal;
+        let UWP = new widgets.PopupModal;
 
         let popDiv = UWP.createPopup();
         let contentDiv = document.getElementById('pContentDiv');
@@ -335,8 +334,7 @@ class itemPage {
     async showItemDetails(itemTitle, DD, ID) {
 
         let elmc = new elmCreator;
-        let UW = await import('./usefulWidgets.js');
-        let itemPopup = new UW.PopupModal;
+        let itemPopup = new widgets.PopupModal;
 
         let popup = await itemPopup.createPopup(itemTitle);
 
@@ -376,7 +374,7 @@ class itemPage {
         footerSaveBut.classList.add('hide');
         footerSaveBut.textContent = 'Save';
 
-        // Change value in DOM on change
+        // Change value in DOM when user types in textarea
         itemTextArea.addEventListener('input', (event)=> {
             itemTextArea.textContent = event.target.value
         })
@@ -503,8 +501,7 @@ class elmCreator {
     }
 
     async createCard(mainElm, cardTitle, collectionID) {
-        let UWImp = await import('./usefulWidgets.js');
-        let DI = new UWImp.hoverInfo;
+        let DI = new widgets.hoverInfo;
 
         let card = document.createElement('div');
         card.setAttribute('class', 'card');
@@ -545,8 +542,6 @@ class elmCreator {
     }
 
     async createItemCard(mainElm, itemTitle, cardNumber, ID) {
-
-        let DDImp = await import('./DragnDrop.js');
 
         let DD = new DDImp.Draggin;
         let IP = new itemPage;

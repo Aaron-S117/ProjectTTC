@@ -1,4 +1,5 @@
 var popupOpen = false;
+var sidebarOpen = false;
 
 export function setSidebar(mainElm) {
 

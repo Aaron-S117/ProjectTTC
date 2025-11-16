@@ -1,3 +1,6 @@
+const loginImport = await import('./login.js');
+const homepageImport = await import ('./homepage.js');
+
 const baseURL = 'http://localhost:3000/'
 
 let storedUser = localStorage.getItem('userID');
@@ -38,11 +41,10 @@ function verifyLogin() {
     return 'test';
 }
 
-async function HandleAccountCreation() {
+function HandleAccountCreation() {
     const loginDiv = document.getElementById('login');
     loginDiv.remove();
 
-    const loginImport = await import('./login.js');
     loginImport.createAccountRegPage();
 
     page = 'CreateAccount';
@@ -50,7 +52,6 @@ async function HandleAccountCreation() {
 
 async function HandleLogin() {
 
-    const loginImport = await import('./login.js');
     let verify = await loginImport.loginWorkflow();
 
     if (verify === true) {
@@ -103,14 +104,12 @@ async function HandleLogin() {
 async function handleHomepage() {
     console.log('This is the homepage');
 
-    const homepageImport = await import ('./homepage.js');
     await homepageImport.homepageHandler();
 
     localStorage.setItem('page', 'Homepage');
 }
 
 async function handleCollectionPage() {
-    const homepageImport = await import ('./homepage.js');
     await homepageImport.collectionpageHandler();
 
     localStorage.setItem('page', 'Collection');
