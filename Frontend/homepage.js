@@ -602,9 +602,25 @@ class elmCreator {
             console.log('editing card');
         })
 
+        editDiv.addEventListener('dragenter', () => {
+            editDiv.classList.toggle('selectionHover');
+        })
+
+        editDiv.addEventListener('dragleave', () => {
+            editDiv.classList.toggle('selectionHover');
+        })
+
         deleteDiv.addEventListener('dragover', (event) => {
             // prevent default to allow drop
             event.preventDefault();
+        })
+
+        deleteDiv.addEventListener('dragenter', () => {
+            deleteDiv.classList.toggle('selectionHover');
+        })
+
+        deleteDiv.addEventListener('dragleave', () => {
+            deleteDiv.classList.toggle('selectionHover');
         })
 
         deleteDiv.addEventListener('drop', (event) => {

@@ -385,7 +385,7 @@ input[type = text], textarea {
     left: -433;
     color: black;
     border: 3px dotted greenyellow;
-    background-color: rgba(144, 238, 144, 0.151);
+    background-color: rgba(144, 238, 144, 0.233);
     border-radius: 5px;
     height: 105px;
     min-width: 400px;
@@ -402,7 +402,7 @@ input[type = text], textarea {
 }
 
 .selectionHover {
-    border-color: yellow;
+    border: 2px double yellow !important;
 }
 
 
