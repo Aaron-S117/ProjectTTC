@@ -121,7 +121,7 @@ const server = http.createServer(async (req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"); // Allow POST for /UserLogin
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS, DELETE"); // Allow POST for /UserLogin
     res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Allow the Content-Type header
 
     if (req.method === 'OPTIONS') {
@@ -459,7 +459,7 @@ const server = http.createServer(async (req, res) => {
                     res.end(JSON.stringify('User Deleted'));
                 }
             } catch(err) {
-                console.log('err');
+                console.log('error: ' + err);
                 res.statusCode = 400;
                 res.end('Issue Deleting Record:' + err);
             }

@@ -639,12 +639,33 @@ class elmCreator {
             deleteDiv.classList.toggle('selectionHover');
         })
 
-        deleteDiv.addEventListener('drop', (event) => {
+        deleteDiv.addEventListener('drop', async (event) => {
             // prevent default action (open as a link for some elements)
             event.preventDefault();
 
-            console.log('deleting card');
-            card.remove();
+            console.log(card.id);
+
+            let reqBody = {
+                ID: card.id
+            }
+
+            console.log(reqBody.ID);
+
+            let response = await fetch(baseURL + 'remove/collection', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reqBody)
+            })
+
+            if (!response){
+                console.log('Issue Deleting Collection')
+            }
+            else {
+                console.log('deleting collection');
+                card.remove();
+            }
         })
 
     }
