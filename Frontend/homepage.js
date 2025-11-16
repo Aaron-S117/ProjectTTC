@@ -557,14 +557,14 @@ class elmCreator {
         // used to prevent creation of multiple selection divs
         let selectionCreated = false;
 
-        card.addEventListener('drag', () => {
+        card.addEventListener('drag', (event) => {
             // stops mouseover event listener from executing
             clearTimeout(hoverTimeout);
             
             if (selectionCreated === false) {
                 selectionCreated = true;
  
-                this.createSelectionDrops(cardSection);
+                this.createSelectionDrops(cardSection, event.target);
             } 
             else if (selectionCreated === true) {
                 // make sure nothing else is created
@@ -573,19 +573,47 @@ class elmCreator {
         }) 
 
         card.addEventListener('dragend', () => {
+            // stops mouseover event listener from executing
+            clearTimeout(hoverTimeout);
             this.deleteSelectionDrops();
             selectionCreated = false;
         })
     }
 
     // Add selection elements to edit or delete card
-    createSelectionDrops(mainElm) {
+    createSelectionDrops(mainElm, card) {
 
         let editDiv = this.createElem(mainElm, 'editDiv', 'empty', 'div', true);
         editDiv.textContent = 'Edit Div';
+        editDiv.setAttribute('draggable', 'true');
 
         let deleteDiv = this.createElem(mainElm, 'deleteDiv', 'empty', 'div');
         deleteDiv.textContent = 'Delete Div';
+        deleteDiv.setAttribute('draggable', 'true');
+
+        editDiv.addEventListener('dragover', (event) => {
+            // prevent default to allow drop
+            event.preventDefault();
+        })
+
+        editDiv.addEventListener('drop', (event) => {
+            // prevent default to allow drop
+            event.preventDefault();
+            console.log('editing card');
+        })
+
+        deleteDiv.addEventListener('dragover', (event) => {
+            // prevent default to allow drop
+            event.preventDefault();
+        })
+
+        deleteDiv.addEventListener('drop', (event) => {
+            // prevent default action (open as a link for some elements)
+            event.preventDefault();
+
+            console.log('deleting card');
+            card.remove();
+        })
 
     }
 

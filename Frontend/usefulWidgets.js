@@ -130,7 +130,7 @@ export class hoverInfo {
         
         this.setPosition(infoDiv, event);
 
-        return 'Info Created'
+        return infoDiv;
     }   
     setPosition(hoverelm, event) {
         let leftPos = event.clientX;

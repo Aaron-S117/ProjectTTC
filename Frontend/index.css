@@ -393,12 +393,16 @@ input[type = text], textarea {
 
 #deleteDiv {
     color: black;
-    border: 2px dotted red;
+    border: 3px dotted red;
     background-color: rgba(231, 71, 71, 0.226);
     border-radius: 5px;
     height: 105px;
     min-width: 400px;
     margin-left: 3vh;
+}
+
+.selectionHover {
+    border-color: yellow;
 }
 
 
