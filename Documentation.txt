@@ -7,7 +7,7 @@ Tech Stack
     - AWS: EC2 (for now)
     - Ubuntu
     - NodeJS Server for Backend
-    - NGINX server for Backend
+    - NGINX server for Frontend
     - PostgreSQL database 
 - Code Repository and Versioning 
     - Git
