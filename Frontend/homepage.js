@@ -614,10 +614,10 @@ class elmCreator {
             let buttonDiv = this.createElem(card, 'editButtonDiv', 'empty', 'div');
 
             let stopEditButton = this.createElem(buttonDiv, 'stopEdit', 'empty', 'button');
-            stopEditButton.textContent = '-';
+            stopEditButton.textContent = 'Cancel';
 
             let submitEditButton = this.createElem(buttonDiv, 'submitEdit', 'empty', 'button');
-            submitEditButton.textContent = '+';
+            submitEditButton.textContent = 'Save';
 
             let editTextArea = this.createElem(card, 'editTA', 'empty', 'textarea');
             editTextArea.value = textValue;
@@ -627,6 +627,10 @@ class elmCreator {
                 editTextArea.remove();
 
                 card.textContent = cardTitle;
+
+                setTimeout(() => {
+                    card.classList.toggle('editing');   
+                }, 500)
             })
 
             //todo submitEditButton.addEventListner('click', () => {}
