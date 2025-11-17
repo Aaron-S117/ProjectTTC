@@ -446,7 +446,7 @@ input[type = text], textarea {
     position: relative;
     right: -65;
     top: -40;
-    max-width: 90%;
+    max-width: 80%;
 }
 
 textarea {

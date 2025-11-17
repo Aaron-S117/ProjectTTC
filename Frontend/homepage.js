@@ -622,6 +622,10 @@ class elmCreator {
             let editTextArea = this.createElem(card, 'editTA', 'empty', 'textarea');
             editTextArea.value = textValue;
 
+            editTextArea.addEventListener('input', (event) => {
+                editTextArea.textContent = event.target.value
+            })
+
             stopEditButton.addEventListener('click', () => {
                 buttonDiv.remove();
                 editTextArea.remove();
@@ -632,8 +636,38 @@ class elmCreator {
                     card.classList.toggle('editing');   
                 }, 500)
             })
+            
+            submitEditButton.addEventListener('click', async () => {
+                let reqBody = {
+                    "ID": card.id,
+                    Columns: {
+                        "collectionTitle": editTextArea.value
+                    }
+                }
 
-            //todo submitEditButton.addEventListner('click', () => {}
+                let response = await fetch(baseURL + 'editCollection', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reqBody)
+                })
+
+                if (!response.ok) {
+                    console.log('Issue Submitting Edit');
+                }
+                else {
+
+                    buttonDiv.remove();
+                    editTextArea.remove();
+                    card.textContent = editTextArea.textContent;
+    
+                    setTimeout(() => {
+                        card.classList.toggle('editing');   
+                    }, 500)
+
+                }
+            })
 
             card.classList.add('editing');
             
@@ -680,7 +714,7 @@ class elmCreator {
                 body: JSON.stringify(reqBody)
             })
 
-            if (!response){
+            if (!response.ok){
                 console.log('Issue Deleting Collection')
             }
             else {
