@@ -13,6 +13,15 @@ Tech Stack
     - Git
     - Github
 
+Security
+- Implements OWASP Methodologies (https://owasp.org/Top10/A00_2021_Introduction/)
+- Main Areas of Focus 
+    - Prevent SQL Injection
+    - Add token authorization to API calls 
+    - Hash and Encrypt values in the database and on the frontend (where necessary)
+    - Prevent user access to pages that are not within their usage scope
+    
+
 Setting up Hosting:
 - Create EC2 instance in AWS console
 - Connect to instance via SSH
