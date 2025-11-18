@@ -4,8 +4,8 @@ This app will expand greatly with time and my growing knowledge of website devel
 
 PLANS:
 - Screen app for security, adding API authentication and encrypted/hashing relevant data
-- Optimize code, narrowing down expensive workflows
     - Implement OWASP (https://owasp.org/Top10/A00_2021_Introduction/)
+- Optimize code, narrowing down expensive workflows
 - Finalize and beutify UI and maximize UX
 - Deploy to AWS for Testing and Production
 - Add admin panel and associated CRUD
