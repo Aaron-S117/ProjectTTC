@@ -1,9 +1,16 @@
 import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
-import { json } from "stream/consumers";
-import { error, time } from "console";
 import { Client } from 'pg';
-import { read } from "fs";
+import { createReadStream } from 'node:fs';
+import { constrainedMemory } from "process";
+
+// import the cypto module
+let crypto;
+try {
+    crypto = await import('node:crypto');
+} catch (err) {
+    console.error('crypto support is disabled');
+}
 
 // .env file reading setup
 dotenv.config();
@@ -576,4 +583,42 @@ function checkLength(object) {
     let objectSize = Object.keys(object).length;
 
     return objectSize;
+}
+
+function createAuthorization(userID) {
+    // todo
+}
+
+function checkAuthExperiation(auth) {
+    // todo
+}
+
+function retrieveAuth(userID) {
+    // todo
+}
+
+// Create hashed code using inputted data
+function createHashData(data) {
+    // Read it as a regular stream (not a piped one)
+    const hash = crypto.createHash('sha256');
+
+    hash.update(data);
+
+    return hash.digest('hex');
+}
+
+// Compare two hahses, mainly for login password comparison
+function compareHashData (hash1, hash2) {
+    if (hash1 === hash2) {
+        console.log('hashes match, same value');
+        return true;
+    }
+    else if (hash1 !== hash2) {
+        console.log(`hashes don't match, not same value`);
+        return false;
+    }
+    else {
+        console.log('something went wrong');
+        return false;
+    }
 }
