@@ -175,10 +175,12 @@ const server = http.createServer(async (req, res) => {
             }
             
             try {
-                let sqlQuery = `SELECT "ID", "Username", "Password" FROM users 
-                WHERE "Username" = '${parsedbody.Username}' and "Password" = '${parsedbody.Password}'`
 
-                let findUser = await client.query(sqlQuery) ;
+                let sqlQuery = `SELECT "ID", "Username", "Password" FROM users WHERE "Username" = $1 and "Password" = $2`;
+
+                let values = [parsedbody.Username, parsedbody.Password];
+
+                let findUser = await client.query(sqlQuery, values);
 
                 if(findUser.rows.length === 0) {
                     res.statusCode = 403
@@ -226,10 +228,11 @@ const server = http.createServer(async (req, res) => {
             
             try {
 
-                let sqlQuery = `INSERT INTO users("Username", "Password")
-                                VALUES ('${parsedbody.Username}', '${parsedbody.Password}')`
+                let sqlQuery = `INSERT INTO users("Username", "Password") VALUES ($1, $2)`;
 
-                let insertUser = await client.query(sqlQuery);
+                let values = [parsedbody.Username, parsedbody.Password];
+
+                let insertUser = await client.query(sqlQuery, values);
 
                 console.log('Row Count: ' + insertUser.rowCount);
             
@@ -259,10 +262,12 @@ const server = http.createServer(async (req, res) => {
 
            try {
                 let sqlQuery = `Insert INTO collection ("userID", "collectionTitle")
-                VALUES ('${parsedbody.user}', '${parsedbody.title}')
-                returning "ID"`
+                VALUES ($1, $2)
+                returning "ID"`;
 
-                let createCollection = await client.query(sqlQuery);
+                let values = [parsedbody.user, parsedbody.title];
+
+                let createCollection = await client.query(sqlQuery, values);
 
                 res.statusCode = 201;
                 res.end(JSON.stringify(createCollection.rows[0]));
@@ -281,9 +286,12 @@ const server = http.createServer(async (req, res) => {
         let userID = urlParams.get('userID');
 
         let sqlQuery = `SELECT "ID", "collectionTitle" FROM collection
-        WHERE "userID" = ${userID}`
+        WHERE "userID" = $1`;
+
+        let values = [userID];
+
         try {
-            let getCollection = await client.query(sqlQuery);
+            let getCollection = await client.query(sqlQuery, values);
 
             res.statusCode = 200;
     
@@ -301,10 +309,12 @@ const server = http.createServer(async (req, res) => {
         let collectionID = urlParams.get('collectionID');
 
         let sqlQuery = `SELECT * FROM item
-        where "collectionID" = ${collectionID}`;
+        where "collectionID" = $1`;
+
+        let values = [collectionID];
     
         try {
-            let getColItems = await client.query(sqlQuery);
+            let getColItems = await client.query(sqlQuery, values);
             res.statusCode = 200;
             res.end(JSON.stringify(getColItems.rows));
             
@@ -330,13 +340,13 @@ const server = http.createServer(async (req, res) => {
 
             let query = `INSERT INTO item 
             ("collectionID", "ItemName", "ItemValue")
-            VALUES ('${parsedBody.collectionID}', '${parsedBody.itemName}', '${parsedBody.itemValue}')
-            RETURNING "ID"`
+            VALUES ($1, $2, $3)
+            RETURNING "ID"`;
 
-            console.log(query);
+            let values = [parsedBody.collectionID, parsedBody.itemName, parsedBody.itemValue]
 
             try {
-                let insertQuery = await client.query(query);
+                let insertQuery = await client.query(query, values);
 
                 res.statusCode = 201;
                 res.end(JSON.stringify(insertQuery.rows))
@@ -353,10 +363,12 @@ const server = http.createServer(async (req, res) => {
         let itemID = urlParams.get('itemID');
 
         let sqlQuery = `SELECT * FROM item
-        where "ID" = '${itemID}'`;
+        where "ID" = $1`;
+
+        let values = [itemID];
 
         try {
-            let getItem = await client.query(sqlQuery);
+            let getItem = await client.query(sqlQuery, values);
             res.statusCode = 200;
             res.end(JSON.stringify(getItem.rows));
             
@@ -381,27 +393,42 @@ const server = http.createServer(async (req, res) => {
 
            try {
 
-                let setClause = "";
+            // Previous code, vulnerable to SQL injection
+                // let setClause = "";
 
-                let objectSize = checkLength(parsedbody.Columns);
+                // let objectSize = checkLength(parsedbody.Columns);
 
-                let endCounter = 1;
+                // let endCounter = 1;
    
-                for (let column in parsedbody.Columns) {
+                // for (let column in parsedbody.Columns) {
 
-                    let columnVal = parsedbody.Columns[column]
-                    if (endCounter < objectSize) {
-                        setClause += `"${column}" = '${columnVal}',`;   
-                        endCounter++;
-                    }
-                    else if (endCounter === objectSize) {
-                        setClause += `"${column}" = '${columnVal}'`;   
-                    }
-                }
+                //     let columnVal = parsedbody.Columns[column]
+                //     if (endCounter < objectSize) {
+                //         setClause += `"${column}" = '${columnVal}',`;   
+                //         endCounter++;
+                //     }
+                //     else if (endCounter === objectSize) {
+                //         setClause += `"${column}" = '${columnVal}'`;   
+                //     }
+                // }
 
-                let sqlQuery = `UPDATE item SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
+                // console.log(setClause);
 
-                let editItem =  await client.query(sqlQuery);
+                // let sqlQuery = `UPDATE item SET $1 WHERE "ID" = $2`;
+
+                // let values = [setClause, parsedbody.ID];
+
+                let columns = parsedbody.Columns;
+                let keys = Object.keys(columns)
+
+                // Dynamic array builder using maps
+                let setClause = keys.map((col, i) => `"${col}" = $${i+1}`).join(",");
+                // ... is a spread operator that turns iterable structures into individual elements 
+                let values = [...keys.map(k => columns[k]), parsedbody.ID];
+
+                let sqlQuery = `UPDATE item SET ${setClause} WHERE "ID" = $${values.length}`;
+
+                let editItem =  await client.query(sqlQuery, values);
 
                 res.statusCode = 201;
                 res.end(JSON.stringify(editItem));
@@ -429,30 +456,43 @@ const server = http.createServer(async (req, res) => {
 
            try {
 
-                let setClause = "";
+            // Old code vulnerable to SQL Injection
+                // let setClause = "";
 
-                let objectSize = checkLength(parsedbody.Columns);
+                // let objectSize = checkLength(parsedbody.Columns);
 
-                let endCounter = 1;
+                // let endCounter = 1;
    
-                for (let column in parsedbody.Columns) {
+                // for (let column in parsedbody.Columns) {
 
-                    let columnVal = parsedbody.Columns[column]
-                    if (endCounter < objectSize) {
-                        setClause += `"${column}" = '${columnVal}',`;   
-                        endCounter++;
-                    }
-                    else if (endCounter === objectSize) {
-                        setClause += `"${column}" = '${columnVal}'`;   
-                    }
-                }
+                //     let columnVal = parsedbody.Columns[column]
+                //     if (endCounter < objectSize) {
+                //         setClause += `"${column}" = '${columnVal}',`;   
+                //         endCounter++;
+                //     }
+                //     else if (endCounter === objectSize) {
+                //         setClause += `"${column}" = '${columnVal}'`;   
+                //     }
+                // }
 
-                let sqlQuery = `UPDATE collection SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
+                // let sqlQuery = `UPDATE collection SET ${setClause} WHERE "ID" = '${parsedbody.ID}'`;
 
-                let editItem =  await client.query(sqlQuery);
+                // let editItem =  await client.query(sqlQuery);
+
+                let columns = parsedbody.Columns;
+                let keys = Object.keys(columns)
+
+                // Dynamic array builder using maps
+                let setClause = keys.map((col, i) => `"${col}" = $${i+1}`).join(",");
+                // ... is a spread operator that turns iterable structures into individual elements 
+                let values = [...keys.map(k => columns[k]), parsedbody.ID];
+
+                let sqlQuery = `UPDATE collection SET ${setClause} WHERE "ID" = $${values.length}`;
+
+                let editCollection =  await client.query(sqlQuery, values);
 
                 res.statusCode = 201;
-                res.end(JSON.stringify(editItem));
+                res.end(JSON.stringify(editCollection));
            } catch (err) {
                 console.log(err);
                 res.statusCode = 400;
@@ -475,13 +515,15 @@ const server = http.createServer(async (req, res) => {
             res.statusCode = 200;
             let parsedbody = JSON.parse(body);
             let ID = parsedbody.ID;
+            let values = [ID];
 
             try {
                 if (parsedUrl.pathname.includes('/collection') === true) {
                     sqlQuery = `DELETE FROM collection
-                    WHERE "ID" = '${ID}'`
+                    WHERE "ID" = $1`;
 
-                    await client.query(sqlQuery);
+
+                    await client.query(sqlQuery, values);
 
                     console.log('removed collection: ' + ID);
                     res.statusCode = 200;
@@ -489,9 +531,9 @@ const server = http.createServer(async (req, res) => {
                 } 
                 else if (parsedUrl.pathname.includes('/item') === true) {
                     sqlQuery = `DELETE FROM item
-                    WHERE "ID" = '${ID}'`
+                    WHERE "ID" = $1`;
 
-                    await client.query(sqlQuery);
+                    await client.query(sqlQuery, values);
 
                     console.log('removed item: ' + ID);
                     res.statusCode = 200;
@@ -499,9 +541,9 @@ const server = http.createServer(async (req, res) => {
                 }
                 else if (parsedUrl.pathname.includes('/user') === true) {
                     sqlQuery = `DELETE FROM users
-                    WHERE "ID" = '${ID}'`
+                    WHERE "ID" = $1`;
 
-                    await client.query(sqlQuery);
+                    await client.query(sqlQuery, values);
 
                     console.log('removed user: ' + ID);
                     res.statusCode = 200;
