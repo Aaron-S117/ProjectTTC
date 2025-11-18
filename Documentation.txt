@@ -1,8 +1,10 @@
 Tech Stack
 - Frontend 
-    - HTML, CSS, Javascript
+    - HTML, CSS, Javascript, Nginx/Python Server
 - Backend 
-    - NodeJS, PostgreSQL, node-postgres (pg. for querying database), dotenv
+    - NodeJS, PostgreSQL, Node Server
+- Libraries
+    - pg (nodejs/node-postgres), crypto, Drag n Drop, dotenv, http
 - Hosting/Operations
     - AWS: EC2 (for now)
     - Ubuntu
