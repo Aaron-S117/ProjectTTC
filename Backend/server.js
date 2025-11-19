@@ -1,16 +1,27 @@
 import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
 import { Client } from 'pg';
-import { createReadStream } from 'node:fs';
-import { constrainedMemory } from "process";
 
 // import the cypto module
 let crypto;
 try {
     crypto = await import('node:crypto');
 } catch (err) {
-    console.error('crypto support is disabled');
+    console.error('crypto support is disabled: ' + err);
 }
+
+let JWT;
+try {
+    JWT = await import('jsonwebtoken');
+} catch (err) {
+    console.error('JWT no available: ' + err)
+}
+
+const payload = { userId: 'user123', role: 'admin' };
+const secret = 'your_secret_key'; // Keep this secure!
+const token = JWT.sign(payload, secret, { expiresIn: '1h' });
+
+console.log(token);
 
 // .env file reading setup
 dotenv.config();

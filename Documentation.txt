@@ -4,7 +4,7 @@ Tech Stack
 - Backend 
     - NodeJS, PostgreSQL, Node Server
 - Libraries
-    - pg (nodejs/node-postgres), crypto, Drag n Drop, dotenv, http
+    - pg (nodejs/node-postgres), crypto, Drag n Drop, dotenv, http, jsonwebtoken
 - Hosting/Operations
     - AWS: EC2 (for now)
     - Ubuntu
@@ -93,6 +93,9 @@ Install dotenv for enviornment configuration:
 
 - Installs node-postgres sql library for querying postgres database in NodeJS 
     - npm install pg
+
+- Install Json Web Token library 
+    - npm install jsonwebtoken
 
 - install postgreSQL database with extra contrib package for util
     - sudo apt install postgresql postgresql-contrib
