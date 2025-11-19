@@ -1,6 +1,7 @@
 import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
 import { Client } from 'pg';
+import JWT from 'jsonwebtoken';
 
 // import the cypto module
 let crypto;
@@ -8,13 +9,6 @@ try {
     crypto = await import('node:crypto');
 } catch (err) {
     console.error('crypto support is disabled: ' + err);
-}
-
-let JWT;
-try {
-    JWT = await import('jsonwebtoken');
-} catch (err) {
-    console.error('JWT no available: ' + err)
 }
 
 const payload = { userId: 'user123', role: 'admin' };
