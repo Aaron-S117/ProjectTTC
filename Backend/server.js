@@ -587,6 +587,7 @@ function checkLength(object) {
 class dataHandler {
     createAccessToken(userID, role) {
         const payload = { userID: userID, role: role};
+        // Using RSA key
         const secret = process.env.privateKey;
         const token = JWT.sign(payload, secret, { expiresIn: '1h', subject: 'Access Token'});
 
@@ -595,32 +596,28 @@ class dataHandler {
 
     createRefreshToken(userID, role, device, browser, ip, screenSize) {
         const payload = { userID: userID, role: role, device: device, browser: browser, ip: ip, screenSize: screenSize};
+        // Using RSA key
         const secret = process.env.privateKey;
-        const token = JWT.sign(payload, secret, { expiresIn: '1d', subject: 'Refresh Token'});
+        const token = JWT.sign(payload, secret, {expiresIn: '1d', subject: 'Refresh Token'});
 
         return token;
     }
-    
-    checkAuthExperiation(auth) {
-        // todo
-    }
-    
-    retrieveAuth(userID) {
+        
+    retrieveRefreshToken(userID) {
         // todo
     }
 
     verifyJWT(token) {
-        try {
-            let verifiedJWT = JWT.verify(token, process.env.privateKey);
-            return verifiedJWT;
-        } catch (err) {
-            console.error(err);
-            return 'invalid signature';
-        }
-    }
-
-    checkJWTExpire(token) {
-        // todo
+        let verification;
+        let verifiedJWT = JWT.verify(token, process.env.privateKey, function(err, decoded) {
+            if(err) {
+                verification = err;
+            }
+            else {
+                verification = decoded;
+            }
+        });
+        return verification;
     }
     
     encryptValue(value) {
@@ -657,4 +654,5 @@ class dataHandler {
         }
     }
 }
+
 
