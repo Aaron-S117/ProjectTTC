@@ -27,67 +27,93 @@ await client.connect();
 
 // Create schema if needed
 try {
-    const res = await client.query(`CREATE TABLE IF NOT EXISTS users
-    (
-        "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-        "Password" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-        "CreatedDate" timestamp with time zone DEFAULT now(),
-        "ChangeDate" time with time zone,
-        CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
-        CONSTRAINT "Unique ID" UNIQUE ("ID")
-            INCLUDE("ID"),
-        CONSTRAINT usernameunique UNIQUE ("Username")
-    )
-    
-    TABLESPACE pg_default;
-    
-    ALTER TABLE IF EXISTS users
-        OWNER to postgres;
-    
-    CREATE TABLE IF NOT EXISTS collection
-    (
-        "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        "userID" integer NOT NULL,
-        "collectionTitle" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-        "collectionSummary" text,
-        "CreatedDate" timestamp with time zone DEFAULT now(),
-        "ChangeDate" time with time zone,
-        CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
-        CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
-            INCLUDE("ID"),
-        CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
-            REFERENCES users ("ID") MATCH SIMPLE
-            ON UPDATE NO ACTION
-            ON DELETE CASCADE
-    )
-    
-    TABLESPACE pg_default;
-    
-    ALTER TABLE IF EXISTS collection
-        OWNER to postgres;
-    
-    CREATE TABLE IF NOT EXISTS item
-    (
-        "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-        "collectionID" integer NOT NULL,
-        "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-        "ItemValue" TEXT,
-        "CreatedDate" timestamp with time zone DEFAULT now(),
-        "ChangeDate" time with time zone,
-        CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
-        CONSTRAINT "Unique Item ID" UNIQUE ("ID")
-            INCLUDE("ID"),
-        CONSTRAINT item_collection FOREIGN KEY ("collectionID")
-            REFERENCES public.collection ("ID") MATCH SIMPLE
-            ON UPDATE NO ACTION
-            ON DELETE CASCADE
-    )
-    
-    TABLESPACE pg_default;
-    
-    ALTER TABLE IF EXISTS item
-        OWNER to postgres;`)
+    const res = await client.query(`CREATE TYPE role as ENUM ('user', 'admin');
+
+CREATE TABLE IF NOT EXISTS Users
+(
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "Password" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "CreatedDate" timestamp with time zone DEFAULT now(),
+    "ChangeDate" time with time zone,
+    CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
+    CONSTRAINT "Unique ID" UNIQUE ("ID")
+        INCLUDE("ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS Users
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS refreshtoken
+(
+    "ID" bigint NOT NULL DEFAULT nextval('"refreshtoken_ID_seq"'::regclass),
+    "userID" integer NOT NULL,
+    "JToken" character varying(1024) COLLATE pg_catalog."default" NOT NULL,
+    "Role" role,
+    "Device" character varying(512) COLLATE pg_catalog."default",
+    "Browser" character varying(512) COLLATE pg_catalog."default",
+    "IP" cidr,
+    "ScreenSize" character varying(12) COLLATE pg_catalog."default",
+    iat character varying(12) COLLATE pg_catalog."default",
+    exp character varying(12) COLLATE pg_catalog."default",
+    sub character varying(30) COLLATE pg_catalog."default",
+    "CreatedDate" timestamp with time zone DEFAULT now(),
+    CONSTRAINT "RT_PKey" PRIMARY KEY ("ID"),
+    CONSTRAINT "JToken_Unique" UNIQUE ("JToken"),
+    CONSTRAINT "rt_user_FKey" FOREIGN KEY ("userID")
+        REFERENCES public.users ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS refreshtoken
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS collection
+(
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "userID" integer NOT NULL,
+    "collectionTitle" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "CreatedDate" timestamp with time zone DEFAULT now(),
+    "ChangeDate" time with time zone,
+    CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
+    CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
+        INCLUDE("ID"),
+    CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
+        REFERENCES Users ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS collection
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS item
+(
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "collectionID" integer NOT NULL,
+    "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "CreatedDate" timestamp with time zone DEFAULT now(),
+    "ChangeDate" time with time zone,
+    CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
+    CONSTRAINT "Unique Item ID" UNIQUE ("ID")
+        INCLUDE("ID"),
+    CONSTRAINT item_collection FOREIGN KEY ("collectionID")
+        REFERENCES collection ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS item
+    OWNER to postgres;`)
     
 
     // const res2 = await client.query('SELECT NOW()');
@@ -594,8 +620,8 @@ class dataHandler {
         return token;
     }
 
-    createRefreshToken(userID, role, device, browser, ip, screenSize) {
-        const payload = { userID: userID, role: role, device: device, browser: browser, ip: ip, screenSize: screenSize};
+    createRefreshToken(userID, Role, Device, Browser, IP, ScreenSize) {
+        const payload = { userID: userID, Role: Role, Device: Device, Browser: Browser, IP: IP, ScreenSize: ScreenSize};
         // Using RSA key
         const secret = process.env.privateKey;
         const token = JWT.sign(payload, secret, {expiresIn: '1d', subject: 'Refresh Token'});
@@ -654,5 +680,3 @@ class dataHandler {
         }
     }
 }
-
-
