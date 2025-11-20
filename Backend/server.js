@@ -2,6 +2,7 @@ import http, {get, ServerResponse} from "http";
 import dotenv from 'dotenv';
 import { Client } from 'pg';
 import JWT from 'jsonwebtoken';
+import { createCipheriv, createDecipheriv, randomFillSync, randomInt, scryptSync} from "crypto";
 
 // import the cypto module
 let crypto;
@@ -25,11 +26,11 @@ const client = new Client({
 
 await client.connect();
 
+// Check if it exists CREATE TYPE role as ENUM ('user', 'admin');
+
 // Create schema if needed
 try {
-    const res = await client.query(`CREATE TYPE role as ENUM ('user', 'admin');
-
-CREATE TABLE IF NOT EXISTS Users
+    const res = await client.query(`CREATE TABLE IF NOT EXISTS Users
 (
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
@@ -647,10 +648,51 @@ class dataHandler {
     }
     
     encryptValue(value) {
-        // todo
+        const algorithm = 'aes-192-cbc';
+        const password = process.env.RSAPublicKey;
+    
+        const randomNumber = (randomInt(1, 248) * 9876543) * (randomInt(1, 248) * 123456789);
+        const rdString = randomNumber.toString();
+    
+        // Get the key
+        const key = scryptSync(password, rdString, 24);
+    
+        // Get the IV
+        const iv = randomFillSync(new Uint8Array(16));
+    
+        // Encrypt
+        const cipher = createCipheriv(algorithm, key, iv);
+        let encrypted = cipher.update(value, 'utf8', 'hex');
+        encrypted += cipher.final('hex');
+
+        const encryptionObject = {
+            "value": encrypted,
+            "key": key,
+            "iv": iv
+        }
+    
+        return encryptionObject;
+    }
+
+    encryptMultipleValues(values) {
+
     }
     
-    decryptValue(value) {
+    decryptValue(encryptedObject) {
+        const algorithm = 'aes-192-cbc';
+        const password = process.env.RSAPublicKey;
+
+        const key = scryptSync(password, 'salt', 24);
+        const iv = Buffer.alloc(16, 0); // Initialization vector.
+
+        const decipher = createDecipheriv(algorithm, encryptedObject.key, encryptedObject.iv);
+
+        let decrypted = decipher.update(encryptedObject.value, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        console.log(decrypted);
+    }
+
+    decryptMultipleValues(values) {
         // todo
     }
     
@@ -680,3 +722,11 @@ class dataHandler {
         }
     }
 }
+
+// let DH = new dataHandler;
+// let encryptedValue = DH.encryptValue('test');
+
+// console.log(encryptedValue);
+
+// let decryptedValue = DH.decryptValue(encryptedValue);
+
