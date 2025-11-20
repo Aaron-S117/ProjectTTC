@@ -11,12 +11,6 @@ try {
     console.error('crypto support is disabled: ' + err);
 }
 
-const payload = { userId: 'user123', role: 'admin' };
-const secret = 'your_secret_key'; // Keep this secure!
-const token = JWT.sign(payload, secret, { expiresIn: '1h' });
-
-console.log(token);
-
 // .env file reading setup
 dotenv.config();
 
@@ -590,40 +584,77 @@ function checkLength(object) {
     return objectSize;
 }
 
-function createAuthorization(userID) {
-    // todo
-}
+class dataHandler {
+    createAccessToken(userID, role) {
+        const payload = { userID: userID, role: role};
+        const secret = process.env.privateKey;
+        const token = JWT.sign(payload, secret, { expiresIn: '1h', subject: 'Access Token'});
 
-function checkAuthExperiation(auth) {
-    // todo
-}
-
-function retrieveAuth(userID) {
-    // todo
-}
-
-// Create hashed code using inputted data
-function createHashData(data) {
-    // Read it as a regular stream (not a piped one)
-    const hash = crypto.createHash('sha256');
-
-    hash.update(data);
-
-    return hash.digest('hex');
-}
-
-// Compare two hahses, mainly for login password comparison
-function compareHashData (hash1, hash2) {
-    if (hash1 === hash2) {
-        console.log('hashes match, same value');
-        return true;
+        return token;
     }
-    else if (hash1 !== hash2) {
-        console.log(`hashes don't match, not same value`);
-        return false;
+
+    createRefreshToken(userID, role, device, browser, ip, screenSize) {
+        const payload = { userID: userID, role: role, device: device, browser: browser, ip: ip, screenSize: screenSize};
+        const secret = process.env.privateKey;
+        const token = JWT.sign(payload, secret, { expiresIn: '1d', subject: 'Refresh Token'});
+
+        return token;
     }
-    else {
-        console.log('something went wrong');
-        return false;
+    
+    checkAuthExperiation(auth) {
+        // todo
+    }
+    
+    retrieveAuth(userID) {
+        // todo
+    }
+
+    verifyJWT(token) {
+        try {
+            let verifiedJWT = JWT.verify(token, process.env.privateKey);
+            return verifiedJWT;
+        } catch (err) {
+            console.error(err);
+            return 'invalid signature';
+        }
+    }
+
+    checkJWTExpire(token) {
+        // todo
+    }
+    
+    encryptValue(value) {
+        // todo
+    }
+    
+    decryptValue(value) {
+        // todo
+    }
+    
+    // Create hashed code using inputted data
+    createHashData(data) {
+        // Read it as a regular stream (not a piped one)
+        const hash = crypto.createHash('sha256');
+    
+        hash.update(data);
+    
+        return hash.digest('hex');
+    }
+    
+    // Compare two hahses, mainly for login password comparison
+    compareHashData (hash1, hash2) {
+        if (hash1 === hash2) {
+            console.log('hashes match, same value');
+            return true;
+        }
+        else if (hash1 !== hash2) {
+            console.log(`hashes don't match, not same value`);
+            return false;
+        }
+        else {
+            console.log('something went wrong');
+            return false;
+        }
     }
 }
+
