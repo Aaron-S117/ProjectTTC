@@ -157,8 +157,8 @@ CREATE TYPE role as ENUM ('user', 'admin');
 
 CREATE TABLE IF NOT EXISTS Users
 (
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "ID" bigserial NOT NULL,
+    "Username" character varying(512) COLLATE pg_catalog."default" NOT NULL,
     "Password" character varying(255) COLLATE pg_catalog."default" NOT NULL,
     "CreatedDate" timestamp with time zone DEFAULT now(),
     "ChangeDate" time with time zone,
@@ -174,12 +174,12 @@ ALTER TABLE IF EXISTS Users
 
 CREATE TABLE IF NOT EXISTS refreshtoken
 (
-    "ID" bigint NOT NULL DEFAULT nextval('"refreshtoken_ID_seq"'::regclass),
+    "ID" bigserial NOT NULL,
     "userID" integer NOT NULL,
     "JToken" character varying(1024) COLLATE pg_catalog."default" NOT NULL,
     "Role" role,
-    "Device" character varying(512) COLLATE pg_catalog."default",
-    "Browser" character varying(512) COLLATE pg_catalog."default",
+    "Device" character varying(1024) COLLATE pg_catalog."default",
+    "Browser" character varying(1024) COLLATE pg_catalog."default",
     "IP" cidr,
     "ScreenSize" character varying(12) COLLATE pg_catalog."default",
     iat character varying(12) COLLATE pg_catalog."default",
@@ -201,9 +201,9 @@ ALTER TABLE IF EXISTS refreshtoken
 
 CREATE TABLE IF NOT EXISTS collection
 (
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "ID" bigserial NOT NULL,
     "userID" integer NOT NULL,
-    "collectionTitle" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "collectionTitle" character varying(512) COLLATE pg_catalog."default" NOT NULL,
     "CreatedDate" timestamp with time zone DEFAULT now(),
     "ChangeDate" time with time zone,
     CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
@@ -222,9 +222,10 @@ ALTER TABLE IF EXISTS collection
 
 CREATE TABLE IF NOT EXISTS item
 (
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "ID" bigserial NOT NULL,
     "collectionID" integer NOT NULL,
     "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+	"ItemValue" text,
     "CreatedDate" timestamp with time zone DEFAULT now(),
     "ChangeDate" time with time zone,
     CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),

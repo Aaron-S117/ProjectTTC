@@ -31,90 +31,91 @@ await client.connect();
 // Create schema if needed
 try {
     const res = await client.query(`CREATE TABLE IF NOT EXISTS Users
-(
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "Username" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    "Password" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    "CreatedDate" timestamp with time zone DEFAULT now(),
-    "ChangeDate" time with time zone,
-    CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
-    CONSTRAINT "Unique ID" UNIQUE ("ID")
-        INCLUDE("ID")
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS Users
-    OWNER to postgres;
-
-CREATE TABLE IF NOT EXISTS refreshtoken
-(
-    "ID" bigint NOT NULL DEFAULT nextval('"refreshtoken_ID_seq"'::regclass),
-    "userID" integer NOT NULL,
-    "JToken" character varying(1024) COLLATE pg_catalog."default" NOT NULL,
-    "Role" role,
-    "Device" character varying(512) COLLATE pg_catalog."default",
-    "Browser" character varying(512) COLLATE pg_catalog."default",
-    "IP" cidr,
-    "ScreenSize" character varying(12) COLLATE pg_catalog."default",
-    iat character varying(12) COLLATE pg_catalog."default",
-    exp character varying(12) COLLATE pg_catalog."default",
-    sub character varying(30) COLLATE pg_catalog."default",
-    "CreatedDate" timestamp with time zone DEFAULT now(),
-    CONSTRAINT "RT_PKey" PRIMARY KEY ("ID"),
-    CONSTRAINT "JToken_Unique" UNIQUE ("JToken"),
-    CONSTRAINT "rt_user_FKey" FOREIGN KEY ("userID")
-        REFERENCES public.users ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS refreshtoken
-    OWNER to postgres;
-
-CREATE TABLE IF NOT EXISTS collection
-(
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "userID" integer NOT NULL,
-    "collectionTitle" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    "CreatedDate" timestamp with time zone DEFAULT now(),
-    "ChangeDate" time with time zone,
-    CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
-    CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
-        INCLUDE("ID"),
-    CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
-        REFERENCES Users ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS collection
-    OWNER to postgres;
-
-CREATE TABLE IF NOT EXISTS item
-(
-    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 5 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "collectionID" integer NOT NULL,
-    "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    "CreatedDate" timestamp with time zone DEFAULT now(),
-    "ChangeDate" time with time zone,
-    CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
-    CONSTRAINT "Unique Item ID" UNIQUE ("ID")
-        INCLUDE("ID"),
-    CONSTRAINT item_collection FOREIGN KEY ("collectionID")
-        REFERENCES collection ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS item
-    OWNER to postgres;`)
+    (
+        "ID" bigserial NOT NULL,
+        "Username" character varying(512) COLLATE pg_catalog."default" NOT NULL,
+        "Password" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+        "CreatedDate" timestamp with time zone DEFAULT now(),
+        "ChangeDate" time with time zone,
+        CONSTRAINT "Users_pkey" PRIMARY KEY ("ID"),
+        CONSTRAINT "Unique ID" UNIQUE ("ID")
+            INCLUDE("ID")
+    )
+    
+    TABLESPACE pg_default;
+    
+    ALTER TABLE IF EXISTS Users
+        OWNER to postgres;
+    
+    CREATE TABLE IF NOT EXISTS refreshtoken
+    (
+        "ID" bigserial NOT NULL,
+        "userID" integer NOT NULL,
+        "JToken" character varying(1024) COLLATE pg_catalog."default" NOT NULL,
+        "Role" role,
+        "Device" character varying(1024) COLLATE pg_catalog."default",
+        "Browser" character varying(1024) COLLATE pg_catalog."default",
+        "IP" cidr,
+        "ScreenSize" character varying(12) COLLATE pg_catalog."default",
+        iat character varying(12) COLLATE pg_catalog."default",
+        exp character varying(12) COLLATE pg_catalog."default",
+        sub character varying(30) COLLATE pg_catalog."default",
+        "CreatedDate" timestamp with time zone DEFAULT now(),
+        CONSTRAINT "RT_PKey" PRIMARY KEY ("ID"),
+        CONSTRAINT "JToken_Unique" UNIQUE ("JToken"),
+        CONSTRAINT "rt_user_FKey" FOREIGN KEY ("userID")
+            REFERENCES public.users ("ID") MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+    )
+    
+    TABLESPACE pg_default;
+    
+    ALTER TABLE IF EXISTS refreshtoken
+        OWNER to postgres;
+    
+    CREATE TABLE IF NOT EXISTS collection
+    (
+        "ID" bigserial NOT NULL,
+        "userID" integer NOT NULL,
+        "collectionTitle" character varying(512) COLLATE pg_catalog."default" NOT NULL,
+        "CreatedDate" timestamp with time zone DEFAULT now(),
+        "ChangeDate" time with time zone,
+        CONSTRAINT collection_pkey PRIMARY KEY ("ID"),
+        CONSTRAINT "Unique Collection ID" UNIQUE ("ID")
+            INCLUDE("ID"),
+        CONSTRAINT "collection_userID_fkey" FOREIGN KEY ("userID")
+            REFERENCES Users ("ID") MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+    )
+    
+    TABLESPACE pg_default;
+    
+    ALTER TABLE IF EXISTS collection
+        OWNER to postgres;
+    
+    CREATE TABLE IF NOT EXISTS item
+    (
+        "ID" bigserial NOT NULL,
+        "collectionID" integer NOT NULL,
+        "ItemName" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+        "ItemValue" text,
+        "CreatedDate" timestamp with time zone DEFAULT now(),
+        "ChangeDate" time with time zone,
+        CONSTRAINT "Item_pkey" PRIMARY KEY ("ID"),
+        CONSTRAINT "Unique Item ID" UNIQUE ("ID")
+            INCLUDE("ID"),
+        CONSTRAINT item_collection FOREIGN KEY ("collectionID")
+            REFERENCES collection ("ID") MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+    )
+    
+    TABLESPACE pg_default;
+    
+    ALTER TABLE IF EXISTS item
+        OWNER to postgres;`)
     
 
     // const res2 = await client.query('SELECT NOW()');
@@ -209,9 +210,13 @@ const server = http.createServer(async (req, res) => {
             
             try {
 
+                let DH = new dataHandler;
+
+                let hashUserPassword = DH.createHashData(parsedbody.Password);
+
                 let sqlQuery = `SELECT "ID", "Username", "Password" FROM users WHERE "Username" = $1 and "Password" = $2`;
 
-                let values = [parsedbody.Username, parsedbody.Password];
+                let values = [parsedbody.Username, hashUserPassword];
 
                 let findUser = await client.query(sqlQuery, values);
 
@@ -261,9 +266,13 @@ const server = http.createServer(async (req, res) => {
             
             try {
 
+                let DH = new dataHandler;
+
+                const hPassword = DH.createHashData(parsedbody.Password);
+
                 let sqlQuery = `INSERT INTO users("Username", "Password") VALUES ($1, $2)`;
 
-                let values = [parsedbody.Username, parsedbody.Password];
+                let values = [parsedbody.Username, hPassword];
 
                 let insertUser = await client.query(sqlQuery, values);
 
@@ -649,16 +658,11 @@ class dataHandler {
     
     encryptValue(value) {
         const algorithm = 'aes-192-cbc';
-        const password = process.env.RSAPublicKey;
-    
-        const randomNumber = (randomInt(1, 248) * 9876543) * (randomInt(1, 248) * 123456789);
-        const rdString = randomNumber.toString();
-    
-        // Get the key
-        const key = scryptSync(password, rdString, 24);
-    
+
         // Get the IV
         const iv = randomFillSync(new Uint8Array(16));
+
+        const key = Buffer.from(process.env.AESKey, 'hex');
     
         // Encrypt
         const cipher = createCipheriv(algorithm, key, iv);
@@ -667,7 +671,6 @@ class dataHandler {
 
         const encryptionObject = {
             "value": encrypted,
-            "key": key,
             "iv": iv
         }
     
@@ -675,21 +678,21 @@ class dataHandler {
     }
 
     encryptMultipleValues(values) {
-
+        // todo
     }
     
     decryptValue(encryptedObject) {
         const algorithm = 'aes-192-cbc';
-        const password = process.env.RSAPublicKey;
 
-        const key = scryptSync(password, 'salt', 24);
-        const iv = Buffer.alloc(16, 0); // Initialization vector.
+        const key = Buffer.from(process.env.AESKey, 'hex');
 
-        const decipher = createDecipheriv(algorithm, encryptedObject.key, encryptedObject.iv);
+        // key and iv come from encrypted object
+        const decipher = createDecipheriv(algorithm, key, encryptedObject.iv);
 
         let decrypted = decipher.update(encryptedObject.value, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
-        console.log(decrypted);
+
+        return decrypted;
     }
 
     decryptMultipleValues(values) {
@@ -723,10 +726,4 @@ class dataHandler {
     }
 }
 
-// let DH = new dataHandler;
-// let encryptedValue = DH.encryptValue('test');
-
-// console.log(encryptedValue);
-
-// let decryptedValue = DH.decryptValue(encryptedValue);
 
