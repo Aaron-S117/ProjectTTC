@@ -1,6 +1,11 @@
 Tired of having so many different note/test taking apps, websites where all the features I want aren't available or behind a restrictive system.
 
-This app will expand greatly with time and my growing knowledge of website development.
+Tech Stack:
+- Frontend: HTML, CSS, JavaScript, Nginx/Python server
+- Backend: Node.js, PostgreSQL, Node HTTP server
+- Libraries: pg, crypto, dotenv, http, jsonwebtoken, custom drag-and-drop module
+- Infrastructure: AWS EC2, Ubuntu, Nginx, Node.js backend, PostgreSQL DB
+- Tools: Git, GitHub
 
 PLANS:
 - Screen app for security, adding API authentication and encrypted/hashing relevant data
