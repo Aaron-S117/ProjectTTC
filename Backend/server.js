@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import { Client } from 'pg';
 import JWT from 'jsonwebtoken';
 import { createCipheriv, createDecipheriv, randomFillSync, randomInt, scryptSync} from "crypto";
+import { json } from "node:stream/consumers";
+import { accessSync, chownSync } from "fs";
 
 // import the cypto module
 let crypto;
@@ -175,12 +177,49 @@ const server = http.createServer(async (req, res) => {
     // get param named name
     // urlParams.get('name');
 
+    let accessTokenDecoed, refreshToken;
+
+    let DH = new dataHandler;
+    if (parsedUrl.pathname === '/UserLogin') {
+        console.log('Continue to User Login API');
+        // continue without code
+    }
+    else {
+        // Get Access Token from URL
+        let accessTokenCoded = urlParams.get('ATC');
+        let userID = urlParams.get('userID');
+
+        accessTokenDecoed = DH.verifyJWT(accessTokenCoded);
+        if(accessTokenDecoed === null) {
+            console.log('Access Token not valid');
+            let refreshToken = await DH.retrieveRefreshToken(client, userID);
+
+            if(refreshToken === null) {
+                res.statusCode = 401;
+                res.end(JSON.stringify('unauthorized'));
+            }
+            else {
+                accessTokenCoded = DH.createAccessToken(userID, refreshToken.Role);
+                accessTokenDecoed = DH.verifyJWT(accessTokenCoded);
+                console.log('New Access Token Created');
+
+                let accessObject = {
+                    ATC: accessTokenCoded
+                }
+                res.write(JSON.stringify(accessObject));
+            }
+        }
+        else {
+            console.log('Access Token Found');
+        }
+    }
+
     if (parsedUrl.pathname === "/test" && method === "GET") {
         let currentTime = new Date();
         res.end(JSON.stringify({message: 'Hello Test, testing at: ' + currentTime.toString()}));
         res.statusCode = 200;
     }
-    else if (parsedUrl.pathname ==='/users' && method === "GET") {
+    else if (parsedUrl.pathname ==='/users' && method === "GET" && accessTokenDecoed.role === "admin") {
         try {
             const allusers = await client.query('SELECT * FROM USERS');
             // console.log(allusers);
@@ -210,8 +249,6 @@ const server = http.createServer(async (req, res) => {
             
             try {
 
-                let DH = new dataHandler;
-
                 let hashUserPassword = DH.createHashData(parsedbody.Password);
 
                 let sqlQuery = `SELECT "ID", "Username", "Password" FROM users WHERE "Username" = $1 and "Password" = $2`;
@@ -226,18 +263,26 @@ const server = http.createServer(async (req, res) => {
                     return;
                 }
 
-                res.statusCode = 200;
-                if (parsedbody.login === false) {
-                    
-                    let userRow = findUser.rows;   
-                    let userID = userRow.map(user => user.ID);
-                    console.log(userID.toString());
+                let userRow = findUser.rows;
+                let userIDMap = userRow.map(user => user.ID);
+                let userID = userIDMap[0];
 
-                    res.end(JSON.stringify(userID.toString()))
+                let accessToken = DH.createAccessToken(userID, 'user');
+                let refreshToken = DH.createRefreshToken(client, userID, 'user');
+
+                let resObject = {
+                    oUserID: userID,
+                    ATC: accessToken
+                }
+
+                res.statusCode = 200;
+
+                if (parsedbody.login === false) {
+                    res.end(JSON.stringify(resObject));
                 }
                 else {
-                    console.log('Account Match');
-                    res.end(JSON.stringify('Account Match'));
+                    console.log(resObject);
+                    res.end(JSON.stringify(resObject));
                 }
 
             } catch(err) {
@@ -265,8 +310,6 @@ const server = http.createServer(async (req, res) => {
             }
             
             try {
-
-                let DH = new dataHandler;
 
                 const hPassword = DH.createHashData(parsedbody.Password);
 
@@ -621,33 +664,86 @@ function checkLength(object) {
 }
 
 class dataHandler {
+    // create access token that will be used as a authentication token for the frontend -> backend interactions
     createAccessToken(userID, role) {
-        const payload = { userID: userID, role: role};
+        const payload = {userID: userID, role: role};
         // Using RSA key
         const secret = process.env.privateKey;
-        const token = JWT.sign(payload, secret, { expiresIn: '1h', subject: 'Access Token'});
+        const token = JWT.sign(payload, secret, { expiresIn: '15min', subject: 'Access Token'});
 
         return token;
     }
 
-    createRefreshToken(userID, Role, Device, Browser, IP, ScreenSize) {
-        const payload = { userID: userID, Role: Role, Device: Device, Browser: Browser, IP: IP, ScreenSize: ScreenSize};
+    // create refresh token and store a shit ton of data in that token
+    createRefreshToken(client, userID, Role, Device, Browser, IP, ScreenSize) {
+        const payload = {userID: userID, Role: Role, Device: Device, Browser: Browser, IP: IP, ScreenSize: ScreenSize};
         // Using RSA key
         const secret = process.env.privateKey;
         const token = JWT.sign(payload, secret, {expiresIn: '1d', subject: 'Refresh Token'});
 
+        let sqlQuery = `INSERT INTO refreshtoken ("userID", "Role", "JToken", "Device", "Browser", "IP", "ScreenSize")
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+
+        let values = [userID, Role, token, Device, Browser, IP, ScreenSize];
+
+        client.query(sqlQuery, values);
+
         return token;
     }
-        
-    retrieveRefreshToken(userID) {
-        // todo
+    
+    // Get latest refresh token associated with a user
+    async retrieveRefreshToken(client, userID) {
+        let sqlQuery = `SELECT * FROM refreshtoken
+        WHERE "userID" = $1`;
+        let values = [userID];
+
+        try {
+            let getToken = await client.query(sqlQuery, values);
+            if (getToken.rows.length === 0) {
+                console.log('No token found');
+                return null;
+            }
+            else {
+                console.log(getToken);
+                let verifyToken = this.verifyJWT(getToken); 
+                
+                if(verifyToken === null) {
+                    console.log('Issue with RefreshToken');
+                    this.removeOldRFToken(client, userID);
+                    return null;
+                }
+                else {
+                    return verifyToken;
+                }
+            }
+        } catch (err) {
+            console.log('Issue getting token: ' + err);
+        }
+    }
+
+    // Removing old token based off their userID
+    async removeOldRFToken(client, userID) {
+        let sqlQuery = `DELETE FROM refreshtoken 
+        WHERE "userID" = $1
+        RETURNING "ID"`;
+        let values = [userID];
+
+        try {
+            const deleteToken = await client.query(sqlQuery, values);
+            console.log('Refresh Token Deleted: ' + deleteToken);
+            return true;
+        } catch (err) {
+            console.log('Issue with deleting token: ' + err);
+            return false;
+        }
     }
 
     verifyJWT(token) {
         let verification;
-        let verifiedJWT = JWT.verify(token, process.env.privateKey, function(err, decoded) {
+        JWT.verify(token, process.env.privateKey, function(err, decoded) {
             if(err) {
-                verification = err;
+                console.log('issue with Token: ' + err);
+                verification = null;
             }
             else {
                 verification = decoded;
