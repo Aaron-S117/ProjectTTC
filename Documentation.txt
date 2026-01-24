@@ -35,6 +35,8 @@ Setting up Hosting:
 - Show Public Key value for SSH Key
     - cat id_ed25519.pub
 - Copy Public Key Value into a new SSH Public Key in Github
+- Load Private key into system (if not done already) 
+	-  ssh-add private_key_file
 - Clone repository into instance 
     - git clone git@github.com:Aaron-S117/ProjectTTC.git
 - Go through server commands
