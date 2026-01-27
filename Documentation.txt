@@ -203,49 +203,33 @@ Install dotenv for enviornment configuration:
 	- Modify default file to look like this (don't just copy the whole thing, only what you need because cert bot implements self generated urls for the keys):
 
 	server {
-	    server_name {VmURL/IP};
-	
-	    root {index.html parent directory};
-	    index index.html;
-	
-	    location / {
-	        try_files $uri $uri/ =404;
-	    }
-	
-	    # Backend for HTTPS
-	    location /api/ {
-	        proxy_pass http://localhost:3000/;
-	        proxy_http_version 1.1;
-	        proxy_set_header Upgrade $http_upgrade;
-	        proxy_set_header Connection 'upgrade';
-	        proxy_set_header Host $host;
-	        proxy_cache_bypass $http_upgrade;
-	    }
-	
-		listen 443 ssl; # managed by Certbot
-		ssl_certificate {filepath created by certbot}; 
-		ssl_certificate_key {filepath created by certbot};
-		include {filepath created by certbot}; 
-		ssl_dhparam {filepath created by certbot}; 
-	}
-	
-	server {
-	    listen 80;
-	    server_name {VmURL/IP};
-	
-	    # Backend for HTTP (optional but safe)
-	    location /api/ {
-	        proxy_pass http://localhost:3000/;
-	        proxy_set_header Host $host;
-	        proxy_set_header X-Real-IP $remote_addr;
-	    }
-	
-	    # Certbot's redirect logic
-	    if ($host = {VmURL/IP}) {
-	        return 301 https://$host$request_uri;
-	    } 
-	
-	    return 404; 
+    listen 443 ssl;
+    server_name {Server Public IP/DNS name};
+
+    # SSL - Ensure these paths exist! Can copy from previous version of file
+    ssl_certificate {Cert SSL File path};
+    ssl_certificate_key {Cert SSL File path};
+    include {Cert SSL File path};
+    ssl_dhparam {Cert SSL File path};
+
+    root {index.html parent directory};
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+		# for internal backends hosted on the same machine
+        proxy_pass http://127.0.0.1:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
 }
 	
 
