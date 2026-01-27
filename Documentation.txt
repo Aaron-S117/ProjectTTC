@@ -1,3 +1,5 @@
+Notes: Replace all backend localhost urls with the VM IP/Address you're calling
+
 Tech Stack
 - Frontend 
     - HTML, CSS, Javascript, Nginx/Python Server
