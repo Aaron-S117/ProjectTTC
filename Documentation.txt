@@ -26,6 +26,7 @@ Security
 
 Setting up Hosting:
 - Create EC2 instance in AWS console
+	- Make sure either ports 80 or 443 are open on the EC2/VM
 - Connect to instance via SSH
 - Update and upgrade instance in SSH  (first time) 
     - sudo apt update 
@@ -142,7 +143,111 @@ Install dotenv for enviornment configuration:
     - for the ubuntu and children folders they should a permission set of "read and write for others"
         - This looks something like: chmod -R o+rw /home/ubuntu
 
-AWS Nginx FrontEnd server start:
+- Go into site-available directory and modify default file
+	- cd /etc/nginx
+	- cd sites-available
+	- See options below
+
+- Option 1: Create HTTP configuration
+	- modify default file
+		- sudo vim default
+	- Nginx default file:
+	server {
+    listen 80;
+    server_name http://houstondevelopmentmap.westus3.cloudapp.azure.com/;
+
+    # The directory where your website files are stored
+    root /home/aestockm/HoustonDevelopmentMap;
+
+    # The specific file to load by default
+    index index.html;
+
+    location / {
+        # This tells Nginx to check if the file exists,
+        # and if not, return a 404 error
+        try_files $uri $uri/ =404;
+    }
+
+	# 2. BACKEND: Forward API requests to localhost:3000
+	    location /api/ {
+	        proxy_pass http://localhost:3000/; # Trailing slash strips "/api/" from the request
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection 'upgrade';
+	        proxy_set_header Host $host;
+	        proxy_cache_bypass $http_upgrade;
+	        proxy_set_header X-Real-IP $remote_addr;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	    }
+}
+
+	- :x to save
+
+- Option 2: Create HTTPS configuration
+	- modify default file
+		- sudo vim default
+	- Nginx default file:
+
+	server {
+    listen 80;
+    server_name {VmURL/IP};
+    return 301 https://$host$request_uri;
+	}
+}
+
+	- Install cert bot:
+		- sudo apt install certbot python3-certbot-nginx -y
+	- sudo certbot --nginx -d {vmURL/IP}
+	- Modify default file to look like this (don't just copy the whole thing, only what you need because cert bot implements self generated urls for the keys):
+
+	server {
+	    server_name {VmURL/IP};
+	
+	    root {index.html parent directory};
+	    index index.html;
+	
+	    location / {
+	        try_files $uri $uri/ =404;
+	    }
+	
+	    # Backend for HTTPS
+	    location /api/ {
+	        proxy_pass http://localhost:3000/;
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection 'upgrade';
+	        proxy_set_header Host $host;
+	        proxy_cache_bypass $http_upgrade;
+	    }
+	
+		listen 443 ssl; # managed by Certbot
+		ssl_certificate {filepath created by certbot}; 
+		ssl_certificate_key {filepath created by certbot};
+		include {filepath created by certbot}; 
+		ssl_dhparam {filepath created by certbot}; 
+	}
+	
+	server {
+	    listen 80;
+	    server_name {VmURL/IP};
+	
+	    # Backend for HTTP (optional but safe)
+	    location /api/ {
+	        proxy_pass http://localhost:3000/;
+	        proxy_set_header Host $host;
+	        proxy_set_header X-Real-IP $remote_addr;
+	    }
+	
+	    # Certbot's redirect logic
+	    if ($host = {VmURL/IP}) {
+	        return 301 https://$host$request_uri;
+	    } 
+	
+	    return 404; 
+}
+	
+
+AWS/Azure Nginx FrontEnd server start:
 - sudo systemctl start nginx
 
 Non-docker FrontEnd server start:
