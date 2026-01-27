@@ -137,8 +137,8 @@ Install dotenv for enviornment configuration:
 
 - WARNING: MAKE SURE THE FRONTEND FILES HAVE THE CORRECT READ WRITE PERMISSIONS and THE CORRECT baseURL 
 	- Permission Fix example:
-		- chmod 755 /home/aestockm/HoustonDevelopmentMap (Main Frontend Folder)
-		- chmod +x /home/aestockm (home directory)
+		- chmod 755 {frontend parent folder} (Main Frontend Folder)
+		- chmod +x {home directory for user} (home directory)
     - baseURL: 'http://ec2instancePublicIP:3000/'
     - for the ubuntu and children folders they should a permission set of "read and write for others"
         - This looks something like: chmod -R o+rw /home/ubuntu
@@ -154,10 +154,10 @@ Install dotenv for enviornment configuration:
 	- Nginx default file:
 	server {
     listen 80;
-    server_name http://houstondevelopmentmap.westus3.cloudapp.azure.com/;
+    server_name {VmURL/IP};
 
     # The directory where your website files are stored
-    root /home/aestockm/HoustonDevelopmentMap;
+    root {index.html parent directory};
 
     # The specific file to load by default
     index index.html;
